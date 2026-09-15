@@ -1,0 +1,753 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="default">
+<meta name="theme-color" content="#f2f2f3">
+<title>飲食紀錄</title>
+<link rel="manifest" href="manifest.json">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Barlow:wght@400;500;600&family=Barlow+Condensed:wght@500;600&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg:#f2f2f3; --ink:#1d1f20; --accent:#5980a6;
+  --a100:#e5ebf1; --a200:#ccd8e4; --a400:#8ba6c2; --a700:#42627f; --a800:#324b61; --a900:#22323f;
+  --n100:#e9e9ea; --n200:#d8d8d9; --divider:#cfd1d3;
+  --over:#c0392b; --over-tint:rgba(192,57,43,.14);
+  --heading:'Barlow Condensed',sans-serif; --body:'Barlow','Noto Sans TC',sans-serif;
+  --g-pro:#8b6fc4; --g-veg:#4f9d74; --g-grain:#b08a48; --g-fat:#e0a83c; --g-fruit:#dd7a80; --g-dairy:#5b8fd6;
+}
+*{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+html,body{margin:0;padding:0}
+body{background:var(--bg);color:var(--ink);font-family:var(--body);font-size:15px;line-height:1.5;
+  padding-bottom:calc(64px + env(safe-area-inset-bottom))}
+h1,h2,h3,.hd{font-family:var(--heading);font-weight:600;margin:0}
+a{color:var(--a700)}
+a:hover{color:var(--a900)}
+button{font-family:inherit;font-size:inherit;color:inherit;cursor:pointer}
+input,select,textarea{font-family:inherit;font-size:16px;color:inherit}
+:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+::selection{background:var(--a200)}
+
+.wrap{max-width:520px;margin:0 auto;padding:0 14px}
+.bp{position:relative;border:1px solid var(--divider);background:transparent}
+.bp::before,.bp::after,.bp>.cnr::before,.bp>.cnr::after{content:"+";position:absolute;font-size:11px;line-height:1;
+  color:var(--accent);opacity:.8}
+.bp::before{top:-6px;left:-4px}
+.bp::after{top:-6px;right:-4px}
+.bp>.cnr::before{bottom:-5px;left:-4px}
+.bp>.cnr::after{bottom:-5px;right:-4px}
+
+.btn{border:1px solid var(--accent);background:transparent;color:var(--a800);padding:0 14px;min-height:40px;
+  display:inline-flex;align-items:center;justify-content:center;gap:6px;border-radius:0;font-weight:500}
+.btn:hover{background:var(--a100)}
+.btn:active{background:var(--a200)}
+.btn-pri{background:var(--accent);color:var(--bg);border-color:var(--accent)}
+.btn-pri:hover{background:var(--a700)}
+.btn-pri:active{background:var(--a800)}
+.btn-ghost{border-color:transparent;color:var(--a700)}
+.btn-ghost:hover{background:var(--a100)}
+.btn:disabled{opacity:.45;cursor:default}
+.blk{width:100%}
+.card{padding:14px;display:flex;flex-direction:column;gap:11px;margin-bottom:13px}
+.kick{font-size:10px;letter-spacing:.14em;text-transform:uppercase;color:var(--a700)}
+.muted{color:#6d7175}
+.inp{width:100%;border:1px solid var(--divider);background:var(--bg);padding:10px 11px;border-radius:0;min-height:44px}
+.inp:focus{border-color:var(--accent);outline:none}
+.tag{display:inline-block;border:1px solid var(--divider);padding:2px 7px;font-size:11px;letter-spacing:.04em}
+.tag-a{border-color:var(--accent);background:var(--a100);color:var(--a900)}
+.tag-o{border-color:var(--a400);color:var(--a800)}
+.tag-r{border-color:var(--over);background:var(--over-tint);color:var(--over)}
+
+.bar{height:6px;position:relative;overflow:hidden}
+.bar>i{position:absolute;inset:0 auto 0 0;display:block}
+
+.cnt{display:flex;align-items:center;gap:0;border:1px solid var(--divider)}
+.cnt button{width:38px;height:38px;border:none;background:transparent;font-family:var(--heading);font-size:20px;
+  display:flex;align-items:center;justify-content:center}
+.cnt button:active{background:var(--a200)}
+.cnt span{min-width:34px;text-align:center;font-family:var(--heading);font-weight:600;font-size:19px}
+
+.nav{position:fixed;left:0;right:0;bottom:0;background:var(--bg);border-top:1px solid var(--divider);
+  display:flex;padding-bottom:env(safe-area-inset-bottom);z-index:20}
+.nav button{flex:1;border:none;background:transparent;padding:11px 0 12px;display:flex;flex-direction:column;
+  align-items:center;gap:3px;font-size:11px;letter-spacing:.06em;color:#6d7175;border-top:2px solid transparent;
+  margin-top:-1px}
+.nav button.on{color:var(--a800);border-top-color:var(--accent);background:var(--a100)}
+.nav button b{font-family:var(--heading);font-size:17px;font-weight:600;line-height:1}
+
+.days{display:grid;grid-template-columns:repeat(7,1fr);gap:3px}
+.days button{border:1px solid var(--divider);background:transparent;padding:5px 0 6px;display:flex;
+  flex-direction:column;align-items:center;gap:2px}
+.days button.on{background:var(--accent);border-color:var(--accent);color:var(--bg)}
+.days button small{font-size:9.5px;opacity:.75}
+.days button b{font-family:var(--heading);font-size:16px;font-weight:600;line-height:1}
+
+.grid6{display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px}
+.gcell{padding:9px 8px 10px;display:flex;flex-direction:column;gap:5px}
+.gcell .nm{font-family:var(--heading);font-weight:600;font-size:14px;line-height:1.15}
+.gcell .vv{font-family:var(--heading);font-weight:600;font-size:20px;line-height:1}
+.sw{width:9px;height:9px;display:inline-block;flex:none}
+
+.row{display:flex;align-items:center;gap:9px}
+.mrow{display:flex;align-items:center;gap:8px;padding:7px 0;border-top:1px solid var(--divider)}
+.mrow:first-of-type{border-top:none}
+.mrow .lbl{flex:1;min-width:0;display:flex;align-items:center;gap:7px;font-size:14px}
+
+.thumb{width:58px;height:58px;flex:none;border:1px solid var(--divider);background:var(--n100);
+  display:flex;align-items:center;justify-content:center;font-size:11px;color:#6d7175;overflow:hidden;padding:0}
+.thumb img{width:100%;height:100%;object-fit:cover;filter:grayscale(1) contrast(1.05)}
+
+.cups{display:grid;grid-template-columns:repeat(8,1fr);gap:4px}
+.cups button{aspect-ratio:1;border:1px solid var(--divider);background:transparent;padding:0}
+.cups button.on{background:var(--a400);border-color:var(--a400)}
+
+.cmt{border:1px solid var(--a200);background:var(--a100);padding:9px 11px;font-size:13.5px;line-height:1.55}
+.cmt .who{font-family:var(--heading);font-weight:600;font-size:12.5px;color:var(--a900);letter-spacing:.04em}
+
+.warn{border:1px solid var(--over);background:rgba(192,57,43,.08);color:var(--over);padding:9px 11px;
+  font-size:13px;line-height:1.5;margin-bottom:13px}
+.toast{position:fixed;left:50%;transform:translateX(-50%);bottom:calc(76px + env(safe-area-inset-bottom));
+  background:var(--a900);color:var(--bg);padding:9px 16px;font-size:13px;z-index:60;opacity:0;
+  transition:opacity .2s;pointer-events:none;max-width:88vw;text-align:center}
+.toast.show{opacity:1}
+.sp{text-align:center;padding:50px 0;color:#6d7175;font-size:14px}
+.hide{display:none!important}
+</style>
+</head>
+<body>
+
+<div id="app"><div class="sp">載入中…</div></div>
+<div id="toast" class="toast"></div>
+
+<script src="config.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.45.4/dist/umd/supabase.js"></script>
+<script>
+/* ───────── 設定與常數 ───────── */
+const GROUPS = [
+  ['pro',   '豆魚蛋肉', 5,  'var(--g-pro)'],
+  ['veg',   '蔬菜',     8,  'var(--g-veg)'],
+  ['grain', '全穀雜糧', 10, 'var(--g-grain)'],
+  ['fat',   '油脂堅果', 3,  'var(--g-fat)'],
+  ['fruit', '水果',     2,  'var(--g-fruit)'],
+  ['dairy', '乳品',     2,  'var(--g-dairy)'],
+];
+const SLOTS = [
+  ['breakfast',  '早餐', '07:30'],
+  ['am_snack',   '早點', '10:00'],
+  ['lunch',      '午餐', '12:30'],
+  ['pm_snack',   '午點', '15:30'],
+  ['dinner',     '晚餐', '19:00'],
+  ['pm2_snack',  '晚點', '21:00'],
+];
+const KCAL   = { pro:75, veg:25, grain:70, fat:45, fruit:60, dairy:120 };
+const MACROS = [
+  ['醣類',     p => p.grain*15 + p.fruit*15 + p.veg*5 + p.dairy*12, 190, 'var(--g-fruit)', false],
+  ['蛋白質',   p => p.pro*7 + p.grain*2 + p.dairy*8,                 90, 'var(--g-dairy)', false],
+  ['脂質',     p => p.fat*5 + p.pro*5 + p.dairy*4,                   50, 'var(--g-veg)',   false],
+  ['膳食纖維', p => p.veg*2.4 + p.fruit*2 + p.grain*1.8,             25, 'var(--g-grain)', true],
+];
+const QUICK = ['蔬菜份量很漂亮，保持。', '這一餐脂肪可以再加半份。', '下次把蛋白質提前吃。'];
+
+/* ───────── 小工具 ───────── */
+const $ = s => document.querySelector(s);
+const el = (t, a = {}, kids = []) => {
+  const n = document.createElement(t);
+  for (const k in a) {
+    if (k === 'class') n.className = a[k];
+    else if (k === 'text') n.textContent = a[k];
+    else if (k === 'html') n.innerHTML = a[k];
+    else if (k.startsWith('on')) n.addEventListener(k.slice(2), a[k]);
+    else if (a[k] !== null && a[k] !== undefined && a[k] !== false) n.setAttribute(k, a[k]);
+  }
+  (Array.isArray(kids) ? kids : [kids]).forEach(c => c && n.appendChild(typeof c === 'string' ? document.createTextNode(c) : c));
+  return n;
+};
+const bp = (cls, kids) => el('div', { class: 'bp ' + cls }, [...(Array.isArray(kids) ? kids : [kids]), el('i', { class: 'cnr' })]);
+const today = () => new Date().toLocaleDateString('sv-SE');
+const fmtDate = d => d.slice(5).replace('-', '/');
+const DOW = ['日', '一', '二', '三', '四', '五', '六'];
+const dowOf = d => DOW[new Date(d + 'T00:00:00').getDay()];
+const shiftDate = (d, n) => { const x = new Date(d + 'T00:00:00'); x.setDate(x.getDate() + n); return x.toLocaleDateString('sv-SE'); };
+let toastT;
+const toast = m => {
+  const t = $('#toast'); t.textContent = m; t.classList.add('show');
+  clearTimeout(toastT); toastT = setTimeout(() => t.classList.remove('show'), 2200);
+};
+
+/* ───────── 狀態 ───────── */
+let sb, me = null;
+const S = { tab: 'home', date: today(), log: null, meals: {}, comments: [], photoUrls: {},
+            students: [], viewStudent: null, saving: false };
+
+/* ───────── 啟動 ───────── */
+(async function boot() {
+  if (typeof SUPABASE_URL === 'undefined' || !/^https:\/\/.+\.supabase\.co/.test(SUPABASE_URL)) {
+    return fatal('config.js 還沒填好',
+      '請打開 config.js，把 Project URL 和 anon public 金鑰貼進去，再重新部署。');
+  }
+  sb = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+  const { data } = await sb.auth.getSession();
+  if (!data.session) return renderLogin();
+  await loadMe();
+})();
+
+function fatal(title, msg) {
+  $('#app').replaceChildren(el('div', { class: 'wrap' }, [
+    el('div', { style: 'padding:60px 0' }, [
+      el('h1', { class: 'hd', style: 'font-size:24px;margin-bottom:8px', text: title }),
+      el('p', { class: 'muted', style: 'font-size:14px', text: msg }),
+    ]),
+  ]));
+}
+
+async function loadMe() {
+  const { data: u } = await sb.auth.getUser();
+  if (!u || !u.user) return renderLogin();
+  const { data, error } = await sb.from('profiles').select('*').eq('id', u.user.id).single();
+  if (error) return fatal('讀取帳號資料失敗', error.message + '（請確認步驟 2 的 SQL 已執行成功）');
+  me = data;
+  if (!me.display_name) me.display_name = u.user.email;
+  S.tab = me.role === 'coach' ? 'coach' : 'home';
+  if (me.role === 'coach') await loadStudents();
+  await loadDay();
+}
+
+/* ───────── 登入 ───────── */
+function renderLogin() {
+  const email = el('input', { class: 'inp', type: 'email', placeholder: 'you@example.com', autocomplete: 'username' });
+  const pass  = el('input', { class: 'inp', type: 'password', placeholder: '密碼', autocomplete: 'current-password' });
+  const msg   = el('p', { class: 'muted', style: 'font-size:13px;margin:0;min-height:18px' });
+  const go = async () => {
+    msg.textContent = '登入中…';
+    const { error } = await sb.auth.signInWithPassword({ email: email.value.trim(), password: pass.value });
+    if (error) { msg.textContent = '登入失敗：' + error.message; return; }
+    $('#app').replaceChildren(el('div', { class: 'sp', text: '載入中…' }));
+    await loadMe();
+  };
+  pass.addEventListener('keydown', e => { if (e.key === 'Enter') go(); });
+  $('#app').replaceChildren(el('div', { class: 'wrap' }, [
+    el('div', { style: 'padding:56px 0 20px' }, [
+      el('div', { class: 'kick', text: '健康飲食追蹤' }),
+      el('h1', { class: 'hd', style: 'font-size:34px;line-height:1.1;margin:6px 0 4px', text: '登入' }),
+      el('p', { class: 'muted', style: 'font-size:13.5px;margin:0', text: '帳號由教練建立，忘記密碼請找教練。' }),
+    ]),
+    bp('card', [
+      el('label', { class: 'kick', text: 'Email' }), email,
+      el('label', { class: 'kick', text: '密碼' }), pass,
+      el('button', { class: 'btn btn-pri blk', style: 'margin-top:4px', onclick: go, text: '登入' }),
+      msg,
+    ]),
+  ]));
+}
+
+/* ───────── 讀取資料 ───────── */
+function targetStudentId() { return me.role === 'coach' ? (S.viewStudent || me.id) : me.id; }
+
+async function loadStudents() {
+  const { data } = await sb.from('profiles').select('id,display_name,role').eq('role', 'student').order('display_name');
+  S.students = data || [];
+  if (!S.viewStudent && S.students.length) S.viewStudent = S.students[0].id;
+}
+
+async function loadDay() {
+  const sid = targetStudentId();
+  S.log = null; S.meals = {}; S.comments = []; S.photoUrls = {};
+  const { data: logs } = await sb.from('daily_logs').select('*').eq('student_id', sid).eq('log_date', S.date).limit(1);
+  S.log = logs && logs[0] ? logs[0] : null;
+  if (S.log) {
+    const [{ data: ms }, { data: cs }] = await Promise.all([
+      sb.from('meals').select('*').eq('daily_log_id', S.log.id),
+      sb.from('comments').select('*, profiles(display_name)').eq('daily_log_id', S.log.id).order('created_at'),
+    ]);
+    (ms || []).forEach(m => { S.meals[m.slot] = m; });
+    S.comments = cs || [];
+    await Promise.all((ms || []).filter(m => m.photo_path).map(async m => {
+      const { data } = await sb.storage.from('meal-photos').createSignedUrl(m.photo_path, 3600);
+      if (data) S.photoUrls[m.slot] = data.signedUrl;
+    }));
+  }
+  render();
+}
+
+async function ensureLog() {
+  if (S.log) return S.log;
+  const { data, error } = await sb.from('daily_logs')
+    .insert({ student_id: me.id, log_date: S.date }).select().single();
+  if (error) { toast('建立紀錄失敗：' + error.message); throw error; }
+  S.log = data; return data;
+}
+
+async function ensureMeal(slot) {
+  if (S.meals[slot]) return S.meals[slot];
+  const log = await ensureLog();
+  const { data, error } = await sb.from('meals')
+    .insert({ daily_log_id: log.id, slot }).select().single();
+  if (error) { toast('儲存失敗：' + error.message); throw error; }
+  S.meals[slot] = data; return data;
+}
+
+/* ───────── 份數編輯（自動儲存） ───────── */
+const saveQ = {};
+let saveT;
+async function bump(slot, gk, d) {
+  const m = await ensureMeal(slot);
+  const p = Object.assign({}, m.portions || {});
+  p[gk] = Math.max(0, Math.min(12, (p[gk] || 0) + d));
+  m.portions = p;
+  saveQ[slot] = true;
+  render();
+  clearTimeout(saveT);
+  saveT = setTimeout(flush, 700);
+}
+async function flush() {
+  const slots = Object.keys(saveQ);
+  for (const s of slots) {
+    delete saveQ[s];
+    const m = S.meals[s];
+    if (!m) continue;
+    const { error } = await sb.from('meals').update({ portions: m.portions }).eq('id', m.id);
+    if (error) toast('儲存失敗：' + error.message);
+  }
+  if (slots.length) toast('已儲存');
+}
+
+async function patchLog(fields) {
+  const log = await ensureLog();
+  Object.assign(S.log, fields);
+  render();
+  const { error } = await sb.from('daily_logs').update(fields).eq('id', log.id);
+  if (error) toast('儲存失敗：' + error.message);
+}
+
+/* ───────── 照片 ───────── */
+async function pickPhoto(slot) {
+  const inp = el('input', { type: 'file', accept: 'image/*', class: 'hide' });
+  document.body.appendChild(inp);
+  inp.addEventListener('change', async () => {
+    const f = inp.files && inp.files[0];
+    inp.remove();
+    if (!f) return;
+    toast('照片上傳中…');
+    try {
+      const m = await ensureMeal(slot);
+      const path = me.id + '/' + S.date + '/' + slot + '.jpg';
+      const { error } = await sb.storage.from('meal-photos').upload(path, f, { upsert: true, contentType: f.type });
+      if (error) return toast('上傳失敗：' + error.message);
+      await sb.from('meals').update({ photo_path: path }).eq('id', m.id);
+      m.photo_path = path;
+      const { data } = await sb.storage.from('meal-photos').createSignedUrl(path, 3600);
+      if (data) S.photoUrls[slot] = data.signedUrl;
+      render();
+      toast('照片已上傳');
+    } catch (e) { toast('上傳失敗'); }
+  });
+  inp.click();
+}
+
+/* ───────── 計算 ───────── */
+function totals() {
+  const t = { pro: 0, veg: 0, grain: 0, fat: 0, fruit: 0, dairy: 0 };
+  Object.values(S.meals).forEach(m => {
+    const p = m.portions || {};
+    GROUPS.forEach(([k]) => { t[k] += Number(p[k] || 0); });
+  });
+  return t;
+}
+function kcalOf(t) { return GROUPS.reduce((a, [k]) => a + t[k] * KCAL[k], 0); }
+
+/* ───────── 畫面元件 ───────── */
+function barEl(pct, color, track) {
+  return el('div', { class: 'bar', style: 'background:' + track }, el('i', { style: 'width:' + pct + '%;background:' + color }));
+}
+
+function counter(slot, gk, n, editable) {
+  if (!editable) return el('span', { class: 'hd', style: 'font-size:17px;min-width:22px;text-align:right', text: String(n) });
+  return el('div', { class: 'cnt' }, [
+    el('button', { text: '−', 'aria-label': '減少', onclick: () => bump(slot, gk, -1) }),
+    el('span', { text: String(n) }),
+    el('button', { text: '＋', 'aria-label': '增加', onclick: () => bump(slot, gk, 1) }),
+  ]);
+}
+
+function dayStrip() {
+  const days = [];
+  for (let i = 6; i >= 0; i--) days.push(shiftDate(today(), -i));
+  return el('div', { class: 'days' }, days.map(d => el('button', {
+    class: d === S.date ? 'on' : '', onclick: async () => { S.date = d; await loadDay(); },
+  }, [
+    el('small', { text: dowOf(d) }),
+    el('b', { text: String(Number(d.slice(8))) }),
+  ])));
+}
+
+function overWarn(t, mac) {
+  const items = [];
+  GROUPS.forEach(([k, nm, tg]) => { if (t[k] > tg) items.push(nm + ' 超 ' + (t[k] - tg) + ' 份'); });
+  mac.forEach(m => { if (m.over) items.push(m.name + ' 超 ' + m.diff + ' g'); });
+  if (!items.length) return null;
+  return el('div', { class: 'warn' }, [
+    el('b', { class: 'hd', style: 'font-size:13.5px', text: '⚠ 超出設定份量　' }),
+    el('span', { text: items.join('、') }),
+  ]);
+}
+
+function macrosOf(t) {
+  return MACROS.map(([name, fn, target, color, isFloor]) => {
+    const g = Math.round(fn(t) * 10) / 10;
+    const over = !isFloor && g > target;
+    return { name, g, target, color, over,
+      diff: Math.round((g - target) * 10) / 10,
+      pct: Math.min(100, Math.round(g / target * 100)) };
+  });
+}
+
+/* ───────── 學員：首頁 ───────── */
+function homeView() {
+  const t = totals(), mac = macrosOf(t), kcal = kcalOf(t);
+  const goal = me.kcal_goal || 1500;
+  const water = (S.log && S.log.water_cups || 0) * 250;
+  const wGoal = me.water_goal_ml || 2000;
+  const editable = me.role !== 'coach' && S.date <= today();
+
+  const nodes = [
+    el('div', { style: 'padding:18px 0 12px' }, [
+      el('div', { class: 'kick', text: S.date === today() ? '今日日期' : '回顧日期' }),
+      el('div', { class: 'hd', style: 'font-size:29px;line-height:1.05', text: S.date.replace(/-/g, '.') }),
+      el('div', { class: 'muted', style: 'font-size:12.5px', text: '星期' + dowOf(S.date) + ' · ' + me.display_name }),
+    ]),
+    dayStrip(),
+    el('div', { style: 'height:13px' }),
+    overWarn(t, mac),
+
+    bp('card', [
+      el('div', { class: 'kick', text: '全日熱量 · ' + fmtDate(S.date) + '（' + dowOf(S.date) + '）' }),
+      el('div', { style: 'display:grid;grid-template-columns:1fr 1fr;text-align:center' }, [
+        el('div', {}, [
+          el('div', { class: 'hd', style: 'font-size:26px;line-height:1', text: String(kcal) }),
+          el('div', { class: 'muted', style: 'font-size:11.5px', text: '已攝取（大卡）' }),
+        ]),
+        el('div', { style: 'border-left:1px solid var(--divider)' }, [
+          el('div', { class: 'hd', style: 'font-size:26px;line-height:1;color:var(--a700)', text: String(Math.max(0, goal - kcal)) }),
+          el('div', { style: 'font-size:11.5px;color:var(--a700)', text: '剩餘 / 目標 ' + goal }),
+        ]),
+      ]),
+      barEl(Math.min(100, Math.round(kcal / goal * 100)), 'var(--accent)', 'var(--a100)'),
+      el('div', { class: 'row', style: 'border-top:1px solid var(--divider);padding-top:9px' }, [
+        el('span', { style: 'font-size:11.5px;color:var(--a700)', text: '飲水' }),
+        el('div', { style: 'flex:1' }, barEl(Math.min(100, Math.round(water / wGoal * 100)), 'var(--a400)', 'var(--a100)')),
+        el('span', { class: 'hd', style: 'font-size:14.5px', text: String(water) }),
+        el('span', { class: 'muted', style: 'font-size:11.5px', text: '/ ' + wGoal + ' ml' }),
+      ]),
+    ]),
+
+    el('div', { class: 'kick', style: 'margin-bottom:8px', text: '六大類 · 份數' }),
+    el('div', { class: 'grid6', style: 'margin-bottom:13px' }, GROUPS.map(([k, nm, tg, color]) => {
+      const n = t[k], over = n > tg;
+      return bp('gcell', [
+        el('span', { class: 'sw', style: 'background:' + (over ? 'var(--over)' : color) }),
+        el('div', { class: 'nm', text: nm }),
+        el('div', { style: 'display:flex;align-items:baseline;gap:3px' }, [
+          el('span', { class: 'vv', style: over ? 'color:var(--over)' : '', text: String(n) }),
+          el('span', { class: 'muted', style: 'font-size:11.5px', text: '/ ' + tg }),
+        ]),
+        barEl(Math.min(100, Math.round(n / tg * 100)), over ? 'var(--over)' : color,
+          over ? 'var(--over-tint)' : 'var(--n200)'),
+      ]);
+    })),
+
+    bp('card', [
+      el('div', { class: 'kick', text: '四大營養素' }),
+      ...mac.map(m => el('div', { class: 'mrow' }, [
+        el('span', { class: 'sw', style: 'background:' + (m.over ? 'var(--over)' : m.color) }),
+        el('span', { style: 'width:58px;font-size:13.5px;font-weight:500', text: m.name }),
+        el('div', { style: 'flex:1' }, barEl(m.pct, m.over ? 'var(--over)' : m.color, m.over ? 'var(--over-tint)' : 'var(--n200)')),
+        el('span', { class: 'hd', style: 'font-size:14.5px' + (m.over ? ';color:var(--over)' : ''), text: String(m.g) }),
+        el('span', { class: 'muted', style: 'font-size:11.5px;width:50px', text: '/ ' + m.target + ' g' }),
+      ])),
+    ]),
+  ];
+
+  // 教練留言
+  const summary = S.comments.filter(c => c.is_summary);
+  const mealC = S.comments.filter(c => !c.is_summary);
+  if (summary.length || mealC.length) {
+    nodes.push(el('div', { class: 'kick', style: 'margin-bottom:8px', text: '教練回饋' }));
+    summary.concat(mealC).forEach(c => {
+      const slot = c.meal_id ? (SLOTS.find(([k]) => S.meals[k] && S.meals[k].id === c.meal_id) || [])[1] : null;
+      nodes.push(el('div', { class: 'cmt', style: 'margin-bottom:8px' }, [
+        el('div', { class: 'who', text: (c.profiles && c.profiles.display_name || '教練') + (c.is_summary ? ' · 今日總結' : (slot ? ' · ' + slot : '')) }),
+        el('div', { text: c.body }),
+      ]));
+    });
+  }
+
+  if (editable) {
+    nodes.push(el('button', {
+      class: 'btn btn-pri blk', style: 'min-height:46px;margin:6px 0 20px',
+      onclick: () => { S.tab = 'log'; render(); }, text: '＋ 紀錄這一餐',
+    }));
+  }
+  return nodes;
+}
+
+/* ───────── 學員：紀錄表 ───────── */
+function logView() {
+  const editable = me.role !== 'coach';
+  const log = S.log || {};
+  const nodes = [
+    el('div', { class: 'row', style: 'padding:14px 0 10px;border-bottom:1px solid var(--divider);margin-bottom:13px' }, [
+      el('button', { class: 'btn btn-ghost', style: 'min-height:34px;padding:0 10px', onclick: () => { S.tab = 'home'; render(); }, text: '←' }),
+      el('span', { class: 'hd', style: 'font-size:18px', text: '紀錄 · ' + fmtDate(S.date) + '（' + dowOf(S.date) + '）' }),
+    ]),
+  ];
+
+  SLOTS.forEach(([slot, name, defTime]) => {
+    const m = S.meals[slot] || { portions: {} };
+    const p = m.portions || {};
+    const url = S.photoUrls[slot];
+    nodes.push(bp('card', [
+      el('div', { class: 'row' }, [
+        el('span', { class: 'hd', style: 'font-size:18px', text: name }),
+        el('input', {
+          class: 'inp', type: 'time', style: 'width:104px;min-height:36px;padding:4px 8px',
+          value: (m.eaten_at || defTime).slice(0, 5), disabled: !editable,
+          onchange: async e => { const mm = await ensureMeal(slot); mm.eaten_at = e.target.value;
+            await sb.from('meals').update({ eaten_at: e.target.value }).eq('id', mm.id); toast('已儲存'); },
+        }),
+        el('span', { style: 'flex:1' }),
+        el('button', {
+          class: 'thumb', onclick: () => editable && pickPhoto(slot), disabled: !editable,
+        }, url ? el('img', { src: url, alt: name + '照片' }) : el('span', { text: '＋ 照片' })),
+      ]),
+      ...GROUPS.map(([gk, nm, , color]) => el('div', { class: 'mrow' }, [
+        el('span', { class: 'lbl' }, [
+          el('span', { class: 'sw', style: 'background:' + color }),
+          el('span', { text: nm }),
+        ]),
+        counter(slot, gk, Number(p[gk] || 0), editable),
+      ])),
+    ]));
+  });
+
+  // 飲水
+  nodes.push(bp('card', [
+    el('div', { class: 'row' }, [
+      el('span', { class: 'kick', text: '飲水（每杯 250 ml）' }),
+      el('span', { style: 'flex:1' }),
+      el('span', { class: 'hd', style: 'font-size:16px', text: (log.water_cups || 0) + ' / 8 杯' }),
+    ]),
+    el('div', { class: 'cups' }, Array.from({ length: 8 }, (_, i) => el('button', {
+      class: (log.water_cups || 0) > i ? 'on' : '', 'aria-label': '第' + (i + 1) + '杯',
+      onclick: () => editable && patchLog({ water_cups: (log.water_cups || 0) === i + 1 ? i : i + 1 }),
+    }))),
+  ]));
+
+  // 睡眠
+  const sleepH = (() => {
+    if (!log.bed_time || !log.wake_time) return '—';
+    const b = log.bed_time.split(':').map(Number), w = log.wake_time.split(':').map(Number);
+    let mins = (w[0] * 60 + w[1]) - (b[0] * 60 + b[1]); if (mins < 0) mins += 1440;
+    return (mins / 60).toFixed(1) + ' 小時';
+  })();
+  nodes.push(bp('card', [
+    el('div', { class: 'kick', text: '睡眠' }),
+    el('div', { class: 'row' }, [
+      el('span', { style: 'font-size:13.5px;width:40px', text: '就寢' }),
+      el('input', { class: 'inp', type: 'time', style: 'width:112px;min-height:38px', value: (log.bed_time || '').slice(0, 5),
+        disabled: !editable, onchange: e => patchLog({ bed_time: e.target.value }) }),
+      el('span', { style: 'font-size:13.5px;width:40px;text-align:right', text: '起床' }),
+      el('input', { class: 'inp', type: 'time', style: 'width:112px;min-height:38px', value: (log.wake_time || '').slice(0, 5),
+        disabled: !editable, onchange: e => patchLog({ wake_time: e.target.value }) }),
+    ]),
+    el('div', { class: 'muted', style: 'font-size:13px', text: '睡眠時數：' + sleepH }),
+  ]));
+
+  // 排便 + 運動
+  nodes.push(bp('card', [
+    el('div', { class: 'kick', text: '排便與運動' }),
+    el('div', { class: 'mrow' }, [
+      el('span', { class: 'lbl', text: '排便次數' }),
+      el('div', { class: 'cnt' }, [
+        el('button', { text: '−', onclick: () => editable && patchLog({ poop_count: Math.max(0, (log.poop_count || 0) - 1) }) }),
+        el('span', { text: String(log.poop_count || 0) }),
+        el('button', { text: '＋', onclick: () => editable && patchLog({ poop_count: Math.min(9, (log.poop_count || 0) + 1) }) }),
+      ]),
+    ]),
+    el('div', { class: 'mrow' }, [
+      el('span', { class: 'lbl', text: '形狀' }),
+      el('select', { class: 'inp', style: 'width:130px;min-height:38px', disabled: !editable,
+        onchange: e => patchLog({ poop_shape: e.target.value }) },
+        ['—', '乾硬顆粒', '香蕉狀', '偏軟', '水狀'].map(v => el('option', { value: v === '—' ? '' : v,
+          selected: (log.poop_shape || '') === (v === '—' ? '' : v), text: v }))),
+    ]),
+    el('div', { class: 'mrow' }, [
+      el('span', { class: 'lbl', text: '運動（分鐘）' }),
+      el('input', { class: 'inp', type: 'number', inputmode: 'numeric', style: 'width:90px;min-height:38px',
+        value: log.exercise_minutes || 0, disabled: !editable,
+        onchange: e => patchLog({ exercise_minutes: Number(e.target.value) || 0 }) }),
+    ]),
+  ]));
+
+  if (editable) {
+    const sent = !!(S.log && S.log.submitted_at);
+    nodes.push(el('button', {
+      class: 'btn btn-pri blk', style: 'min-height:46px;margin:6px 0 20px', disabled: sent,
+      onclick: async () => { await patchLog({ submitted_at: new Date().toISOString() }); toast('已送出給教練'); },
+      text: sent ? '已送出 · 等教練回覆' : '送出今日紀錄給教練',
+    }));
+  }
+  return nodes;
+}
+
+/* ───────── 教練：看紀錄與留言 ───────── */
+function coachView() {
+  const t = totals(), mac = macrosOf(t);
+  const nodes = [
+    el('div', { style: 'padding:18px 0 12px' }, [
+      el('div', { class: 'kick', text: '教練檢視' }),
+      el('div', { class: 'hd', style: 'font-size:26px;line-height:1.1', text: S.date.replace(/-/g, '.') + '（' + dowOf(S.date) + '）' }),
+    ]),
+    el('select', { class: 'inp', style: 'margin-bottom:10px',
+      onchange: async e => { S.viewStudent = e.target.value; await loadDay(); } },
+      S.students.length
+        ? S.students.map(s => el('option', { value: s.id, selected: s.id === S.viewStudent, text: s.display_name }))
+        : [el('option', { text: '（還沒有學員帳號）' })]),
+    dayStrip(),
+    el('div', { style: 'height:13px' }),
+    overWarn(t, mac),
+  ];
+
+  if (!S.log) {
+    nodes.push(el('div', { class: 'sp', text: '這天沒有紀錄' }));
+    return nodes;
+  }
+
+  nodes.push(bp('card', [
+    el('div', { class: 'kick', text: '全日合計' }),
+    el('div', { style: 'display:flex;flex-wrap:wrap;gap:6px' }, GROUPS.map(([k, nm, tg]) =>
+      el('span', { class: 'tag ' + (t[k] > tg ? 'tag-r' : (t[k] >= tg ? 'tag-a' : 'tag-o')), text: nm + ' ' + t[k] + '/' + tg }))),
+    el('div', { class: 'muted', style: 'font-size:13px' , text: '熱量 ' + kcalOf(t) + ' 大卡　飲水 ' + ((S.log.water_cups || 0) * 250) + ' ml　運動 ' + (S.log.exercise_minutes || 0) + ' 分' }),
+    el('div', { style: 'font-size:12.5px;color:' + (S.log.submitted_at ? 'var(--a700)' : '#6d7175'),
+      text: S.log.submitted_at ? '學員已送出' : '學員尚未送出' }),
+  ]));
+
+  SLOTS.forEach(([slot, name]) => {
+    const m = S.meals[slot];
+    if (!m) return;
+    const p = m.portions || {};
+    const filled = GROUPS.filter(([k]) => Number(p[k] || 0) > 0);
+    const url = S.photoUrls[slot];
+    const cs = S.comments.filter(c => c.meal_id === m.id);
+    const ta = el('textarea', { class: 'inp', rows: 2, placeholder: '對「' + name + '」留言…' });
+    nodes.push(bp('card', [
+      el('div', { class: 'row' }, [
+        el('span', { class: 'hd', style: 'font-size:17px', text: name }),
+        el('span', { class: 'muted', style: 'font-size:12.5px', text: (m.eaten_at || '').slice(0, 5) }),
+        el('span', { style: 'flex:1' }),
+        url ? el('a', { class: 'thumb', href: url, target: '_blank', rel: 'noopener' }, el('img', { src: url, alt: name })) : null,
+      ]),
+      el('div', { style: 'display:flex;flex-wrap:wrap;gap:5px' },
+        filled.length
+          ? filled.map(([k, nm]) => el('span', { class: 'tag', text: nm + ' ' + p[k] }))
+          : [el('span', { class: 'tag tag-o', text: '未填份數' })]),
+      ...cs.map(c => el('div', { class: 'cmt' }, [
+        el('div', { class: 'who', text: (c.profiles && c.profiles.display_name || '教練') }),
+        el('div', { text: c.body }),
+      ])),
+      el('div', { style: 'display:flex;flex-wrap:wrap;gap:5px' }, QUICK.map(q =>
+        el('button', { class: 'btn', style: 'min-height:28px;padding:0 8px;font-size:11.5px',
+          onclick: () => { ta.value = q; ta.focus(); }, text: q.slice(0, 8) + '…' }))),
+      ta,
+      el('button', { class: 'btn btn-pri', style: 'align-self:flex-start;min-height:36px',
+        onclick: () => sendComment(ta, m.id, false), text: '送出留言' }),
+    ]));
+  });
+
+  const st = el('textarea', { class: 'inp', rows: 3, placeholder: '今天整體的建議…' });
+  nodes.push(bp('card', [
+    el('div', { class: 'kick', text: '今日總結' }),
+    st,
+    el('button', { class: 'btn btn-pri', style: 'align-self:flex-start;min-height:38px',
+      onclick: () => sendComment(st, null, true), text: '送出總結' }),
+  ]));
+  nodes.push(el('div', { style: 'height:20px' }));
+  return nodes;
+}
+
+async function sendComment(ta, mealId, isSummary) {
+  const body = ta.value.trim();
+  if (!body) return toast('請先輸入內容');
+  const { error } = await sb.from('comments').insert({
+    daily_log_id: S.log.id, meal_id: mealId, author_id: me.id, is_summary: isSummary, body,
+  });
+  if (error) return toast('送出失敗：' + error.message);
+  ta.value = '';
+  toast('已送出');
+  await loadDay();
+}
+
+/* ───────── 設定 ───────── */
+function setView() {
+  return [
+    el('div', { style: 'padding:18px 0 12px' }, [
+      el('div', { class: 'kick', text: '設定' }),
+      el('div', { class: 'hd', style: 'font-size:26px', text: me.display_name || '' }),
+      el('div', { class: 'muted', style: 'font-size:13px', text: me.role === 'coach' ? '教練帳號' : '學員帳號' }),
+    ]),
+    bp('card', [
+      el('div', { class: 'kick', text: '顯示名稱' }),
+      (() => {
+        const i = el('input', { class: 'inp', value: me.display_name || '' });
+        i.addEventListener('change', async () => {
+          const v = i.value.trim(); if (!v) return;
+          const { error } = await sb.from('profiles').update({ display_name: v }).eq('id', me.id);
+          if (error) return toast('儲存失敗：' + error.message);
+          me.display_name = v; toast('已儲存'); render();
+        });
+        return i;
+      })(),
+      el('div', { class: 'kick', style: 'margin-top:6px', text: '每日熱量目標' }),
+      (() => {
+        const i = el('input', { class: 'inp', type: 'number', inputmode: 'numeric', value: me.kcal_goal || 1500 });
+        i.addEventListener('change', async () => {
+          const v = Number(i.value) || 1500;
+          const { error } = await sb.from('profiles').update({ kcal_goal: v }).eq('id', me.id);
+          if (error) return toast('儲存失敗：' + error.message);
+          me.kcal_goal = v; toast('已儲存'); render();
+        });
+        return i;
+      })(),
+    ]),
+    bp('card', [
+      el('div', { class: 'kick', text: '帳號' }),
+      el('button', { class: 'btn blk', onclick: async () => { await sb.auth.signOut(); location.reload(); }, text: '登出' }),
+    ]),
+    el('p', { class: 'muted', style: 'font-size:12px;line-height:1.7' , text: '營養素換算為暫估係數，請以營養師建議為準。' }),
+  ];
+}
+
+/* ───────── 底部導覽 ───────── */
+function nav() {
+  const items = me.role === 'coach'
+    ? [['coach', '學', '學員'], ['home', '日', '單日'], ['set', '設', '設定']]
+    : [['home', '首', '首頁'], ['log', '記', '紀錄'], ['set', '設', '設定']];
+  return el('nav', { class: 'nav' }, items.map(([k, mark, label]) => el('button', {
+    class: S.tab === k ? 'on' : '', onclick: () => { S.tab = k; render(); },
+  }, [el('b', { text: mark }), el('span', { text: label })])));
+}
+
+/* ───────── 主渲染 ───────── */
+function render() {
+  const body = S.tab === 'coach' ? coachView()
+    : S.tab === 'log' ? logView()
+    : S.tab === 'set' ? setView()
+    : homeView();
+  $('#app').replaceChildren(el('div', { class: 'wrap' }, body.filter(Boolean)), nav());
+}
+</script>
+</body>
+</html>
