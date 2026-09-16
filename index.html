@@ -6,6 +6,8 @@
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
 <meta name="theme-color" content="#0F1F1B">
+<meta name="color-scheme" content="light only">
+<meta name="supported-color-schemes" content="light">
 <title>飲食紀錄</title>
 <link rel="manifest" href="manifest.json">
 <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -13,6 +15,7 @@
 <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@400;500;700;900&display=swap" rel="stylesheet">
 <style>
 :root{
+  color-scheme: light only;
   --bg:#F2F6F5; --card:#FFFFFF; --soft:#F6FAF9;
   --ink:#0F1F1B; --ink2:#2A3A35; --mut:#7A8A85; --mut2:#A8B5B1;
   --line:#E5EDEA; --line2:#EDF2F0;
@@ -37,16 +40,16 @@ input,select,textarea{font-family:inherit;font-size:16px;color:inherit}
 ::selection{background:var(--ac-l)}
 
 .wrap{max-width:460px;margin:0 auto;padding:0 18px}
-.hero{background:var(--ink);padding:calc(26px + env(safe-area-inset-top)) 0 62px;position:relative;overflow:hidden}
-.hero svg.deco{position:absolute;right:-30px;top:-16px;opacity:.15;pointer-events:none}
-.hero .wrap{position:relative}
+.hero{background:var(--ink);padding:calc(24px + env(safe-area-inset-top)) 0 56px;position:relative;overflow:hidden}
+.hero svg.deco{position:absolute;right:-34px;bottom:-26px;width:120px;height:120px;opacity:.13;pointer-events:none}
+.hero .wrap{position:relative;z-index:1}
 .kick{font-size:11.5px;letter-spacing:.14em;color:var(--mint);font-weight:500}
-.h1{font-size:25px;font-weight:900;color:#fff;line-height:1.3;margin:4px 0 0}
+.h1{font-size:24px;font-weight:900;color:#fff;line-height:1.35;margin:4px 0 0;word-break:break-word}
 .sub{font-size:13px;color:#8FAFA6;margin-top:4px}
 
 .card{background:var(--card);border-radius:20px;padding:18px;margin-bottom:12px}
 .card.lift{box-shadow:0 8px 28px rgba(20,60,50,.10)}
-.card.pull{margin:-46px 18px 12px;border-radius:24px}
+.card.pull{margin:-40px 18px 12px;border-radius:24px;position:relative;z-index:2}
 .ttl{font-size:16.5px;font-weight:700;color:var(--ink)}
 .lbl{font-size:11.5px;letter-spacing:.1em;color:var(--mut);font-weight:500}
 .mut{color:var(--mut)}
@@ -168,6 +171,36 @@ textarea.inp{min-height:auto;line-height:1.6}
 .plan-c{background:var(--soft);border-radius:14px;padding:12px 14px}
 .plan-c .k{font-size:11.5px;color:var(--mut)}
 .plan-c .v{font-size:19px;font-weight:700;color:var(--ink);margin-top:2px}
+
+/* 「我的」頁 */
+.duo{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:18px}
+.duo>button{text-align:left;border-radius:18px;padding:15px 16px;background:#fff;
+  box-shadow:0 2px 10px rgba(20,60,50,.06);display:flex;flex-direction:column;gap:5px}
+.duo>button.fill{background:var(--ac);box-shadow:0 6px 18px rgba(23,168,140,.26)}
+.duo .ch{display:flex;align-items:center;justify-content:space-between;font-size:13px;color:var(--mut)}
+.duo .fill .ch{color:rgba(255,255,255,.85)}
+.duo .cv{font-size:29px;font-weight:900;line-height:1.05;color:var(--ink)}
+.duo .fill .cv{color:#fff}
+.duo .cs{font-size:12.5px;color:var(--ac-d)}
+.duo .fill .cs{color:rgba(255,255,255,.9)}
+.lrow{width:100%;display:flex;align-items:center;gap:13px;padding:14px 16px;background:#fff;text-align:left}
+.lrow+.lrow{border-top:1px solid var(--line2)}
+.lrow .ic{width:38px;height:38px;flex:none;border-radius:11px;display:flex;align-items:center;justify-content:center}
+.lrow .t{font-size:15px;font-weight:500;color:var(--ink2)}
+.lrow .s{font-size:12.5px;color:var(--mut);margin-top:2px}
+.lgroup{border-radius:18px;overflow:hidden;box-shadow:0 2px 10px rgba(20,60,50,.06);margin-bottom:18px}
+.drow{display:flex;align-items:center;justify-content:space-between;padding:15px 0;
+  border-bottom:1px solid var(--line2);gap:14px}
+.drow:last-child{border-bottom:none}
+.drow .k{font-size:15px;font-weight:500;color:var(--ink2)}
+.drow .v{font-size:15px;color:var(--ink);text-align:right}
+.cdown{background:#134A3E;padding:26px 18px 30px;text-align:center}
+.cdown .k{font-size:13.5px;color:#A9CFC5}
+.cdown .v{font-size:56px;font-weight:900;color:#fff;line-height:1.05;margin-top:4px}
+.cdown .v small{font-size:20px;font-weight:700;margin-left:4px}
+.tbar{display:flex;align-items:center;gap:12px;padding:calc(14px + env(safe-area-inset-top)) 18px 14px;
+  background:#fff;border-bottom:1px solid var(--line2)}
+.tbar .tt{flex:1;font-size:17px;font-weight:700}
 </style>
 </head>
 <body>
@@ -175,7 +208,7 @@ textarea.inp{min-height:auto;line-height:1.6}
 <div id="app"><div class="sp">載入中…</div></div>
 <div id="toast" class="toast"></div>
 
-<script src="config.js?v=3"></script>
+<script src="config.js?v=4"></script>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.45.4/dist/umd/supabase.js"></script>
 <script>
 /* ───────── 常數 ───────── */
@@ -191,6 +224,11 @@ const ICON = {
   user:'<circle cx="12" cy="8" r="3.6"/><path d="M5 20c0-3.6 3.1-6 7-6s7 2.4 7 6"/>',
   people:'<circle cx="9" cy="8" r="3.4"/><path d="M3 20c0-3.4 2.7-5.6 6-5.6s6 2.2 6 5.6"/><path d="M16 5.2a3.4 3.4 0 0 1 0 6.6M17.5 14.8c2.1.6 3.5 2.4 3.5 5.2"/>',
   cam:'<path d="M3 8h4l1.5-2h7L17 8h4v12H3z"/><circle cx="12" cy="13.5" r="3.6"/>',
+  chart:'<path d="M4 20V9M10 20V4M16 20v-7M22 20H2"/>',
+  scale:'<rect x="3" y="4" width="18" height="16" rx="3"/><path d="M12 8v3"/><path d="M8.5 12.5a3.5 3.5 0 0 1 7 0"/>',
+  target:'<circle cx="12" cy="12" r="8"/><circle cx="12" cy="12" r="3.4"/>',
+  cog:'<circle cx="12" cy="12" r="3"/><path d="M12 3v2.5M12 18.5V21M3 12h2.5M18.5 12H21M5.6 5.6l1.8 1.8M16.6 16.6l1.8 1.8M18.4 5.6l-1.8 1.8M7.4 16.6l-1.8 1.8"/>',
+  logout:'<path d="M14 4H6v16h8"/><path d="M13 12h8M18 9l3 3-3 3"/>',
 };
 const GROUPS = [
   ['pro',   '豆魚蛋肉', 5,  'pro',   'egg'],
@@ -304,7 +342,7 @@ const toast = m => { const t = $('#toast'); t.textContent = m; t.classList.add('
 /* ───────── 狀態 ───────── */
 let sb, me = null;
 const S = { tab:'home', date:today(), log:null, meals:{}, comments:[], photoUrls:{},
-            students:[], viewStudent:null };
+            students:[], viewStudent:null, weights:[] };
 
 /* ───────── 啟動 ───────── */
 (async function boot() {
@@ -333,9 +371,9 @@ async function loadMe() {
   const { data, error } = await sb.from('profiles').select('*').eq('id', u.user.id).single();
   if (error) return fatal('讀不到帳號資料', error.message);
   me = data;
-  if (!me.display_name) me.display_name = u.user.email;
+  if (!me.display_name) me.display_name = (u.user.email || '').split('@')[0];
   S.tab = me.role === 'coach' ? 'coach' : 'home';
-  if (me.role === 'coach') await loadStudents();
+  if (me.role === 'coach') await loadStudents(); else await loadWeights();
   await loadDay();
 }
 
@@ -531,7 +569,7 @@ function homeView() {
   const hero = el('div', { class: 'hero' }, [
     el('div', { class: 'wrap' }, [
       el('div', { class: 'kick', text: day ? 'DAY ' + day : (isToday ? 'TODAY' : '回顧') }),
-      el('div', { class: 'h1', text: isToday ? me.display_name + '，今天記了嗎' : me.display_name }),
+      el('div', { class: 'h1', text: isToday ? '嗨，' + me.display_name : me.display_name }),
       el('div', { class: 'sub', text: Number(S.date.slice(5, 7)) + ' 月 ' + Number(S.date.slice(8)) + ' 日 · 星期' + dowOf(S.date) }),
     ]),
     (() => { const s = svg(ICON.leaf, 170, '#5BE2BE', 1); s.setAttribute('class', 'deco'); return s; })(),
@@ -825,15 +863,264 @@ async function sendComment(ta, mealId, isSummary) {
 }
 
 /* ───────── 設定 ───────── */
-function setView() {
-  const head = el('div', { class: 'hero', style: 'padding-bottom:56px' }, [
-    el('div', { class: 'wrap' }, [
-      el('div', { class: 'kick', text: me.role === 'coach' ? 'COACH' : 'MEMBER' }),
-      el('div', { class: 'h1', text: me.display_name || '' }),
-      el('div', { class: 'sub', text: me.role === 'coach' ? '教練帳號' : '學員帳號' }),
-    ]),
-    (() => { const s = svg(ICON.user, 150, '#5BE2BE', 1); s.setAttribute('class', 'deco'); return s; })(),
+function planInfo(p) {
+  const days = Number(p.plan_days) || 30;
+  const start = p.plan_started_at ? new Date(p.plan_started_at) : null;
+  if (!start) return { days, elapsed: 0, left: days, pct: 0 };
+  const elapsed = Math.max(0, Math.floor((Date.now() - start) / 864e5));
+  return { days, elapsed, left: Math.max(0, days - elapsed),
+    pct: Math.min(100, Math.round(elapsed / days * 100)) };
+}
+
+function latestWeight() {
+  if (S.weights.length) return Number(S.weights[0].weight_kg);
+  return Number(me.weight_kg) || null;
+}
+function startWeight() {
+  if (S.weights.length) return Number(S.weights[S.weights.length - 1].weight_kg);
+  return Number(me.weight_kg) || null;
+}
+
+async function loadWeights() {
+  const { data } = await sb.from('body_measurements')
+    .select('id,measured_on,weight_kg').eq('student_id', me.id)
+    .not('weight_kg', 'is', null).order('measured_on', { ascending: false }).limit(60);
+  S.weights = data || [];
+}
+
+function listRow(icon, tint, color, title, sub, onclick) {
+  return el('button', { class: 'lrow', onclick }, [
+    el('span', { class: 'ic', style: 'background:' + tint }, svg(ICON[icon], 20, color)),
+    el('span', { style: 'flex:1;min-width:0' }, [
+      el('span', { class: 't', style: 'display:block', text: title }),
+      sub ? el('span', { class: 's', style: 'display:block', text: sub }) : null,
+    ].filter(Boolean)),
+    svg('<path d="M9 6l6 6-6 6"/>', 17, 'var(--mut2)'),
   ]);
+}
+
+/* ───────── 我的 ───────── */
+function setView() {
+  const isCoach = me.role === 'coach';
+  const pi = planInfo(me);
+  const lw = latestWeight(), sw = startWeight();
+  const diff = (lw !== null && sw !== null) ? Math.round((lw - sw) * 10) / 10 : null;
+
+  const head = el('div', { style: 'background:#fff;padding:calc(20px + env(safe-area-inset-top)) 0 20px;border-bottom:1px solid var(--line2)' },
+    el('div', { class: 'wrap', style: 'display:flex;align-items:center;gap:13px' }, [
+      el('div', { class: 'av', style: 'width:48px;height:48px;font-size:19px', text: (me.display_name || '?').slice(0, 1) }),
+      el('div', { style: 'flex:1;min-width:0' }, [
+        el('div', { style: 'font-size:20px;font-weight:700;line-height:1.2', text: me.display_name || '' }),
+        el('div', { class: 'mut', style: 'font-size:12.5px', text: isCoach ? '教練帳號' : '學員帳號' }),
+      ]),
+    ]));
+
+  const items = [];
+
+  if (!isCoach) {
+    items.push(el('div', { class: 'duo' }, [
+      el('button', { class: 'fill', onclick: () => { S.tab = 'weight'; window.scrollTo(0, 0); render(); } }, [
+        el('span', { class: 'ch' }, [ el('span', { text: '體重趨勢' }), svg('<path d="M9 6l6 6-6 6"/>', 15, 'currentColor') ]),
+        el('span', { class: 'cv' }, [
+          el('span', { text: lw !== null ? String(lw) : '—' }),
+          el('span', { style: 'font-size:14px;font-weight:700;margin-left:3px', text: '公斤' }),
+        ]),
+        el('span', { class: 'cs', text: diff === null ? '還沒紀錄'
+          : (diff === 0 ? '持平' : '總共 ' + (diff > 0 ? '+' : '') + diff + 'kg') }),
+      ]),
+      el('button', { onclick: () => {
+        if (!me.plan_started_at) { D.ob = 0; D.draft = {}; S.tab = 'onb'; }
+        else S.tab = 'plan';
+        window.scrollTo(0, 0); render();
+      } }, [
+        el('span', { class: 'ch' }, [ el('span', { text: '計畫倒數' }), svg('<path d="M9 6l6 6-6 6"/>', 15, 'currentColor') ]),
+        el('span', { class: 'cv' }, me.plan_started_at
+          ? [ el('span', { text: String(pi.left) }), el('span', { style: 'font-size:14px;font-weight:700;margin-left:3px', text: '天' }) ]
+          : [ el('span', { style: 'font-size:19px', text: '未設定' }) ]),
+        me.plan_started_at
+          ? el('span', { style: 'display:flex;flex-direction:column;gap:5px' }, [
+              el('span', { class: 'cs', text: pi.pct + '% 已完成' }),
+              el('span', { class: 'bar', style: 'height:6px;background:var(--line)' },
+                el('i', { style: 'width:' + pi.pct + '%;background:var(--ac)' })),
+            ])
+          : el('span', { class: 'cs', text: '點這裡開始' }),
+      ]),
+    ]));
+  }
+
+  items.push(el('div', { class: 'ttl', style: 'font-size:16.5px;margin-bottom:10px', text: '資料中心' }));
+  const rows = [];
+  if (!isCoach) {
+    rows.push(listRow('target', 'var(--ac-l)', 'var(--ac)', '計畫目標', '目標、熱量、活動量',
+      () => { if (!me.plan_started_at) { D.ob = 0; D.draft = {}; S.tab = 'onb'; } else S.tab = 'plan';
+        window.scrollTo(0, 0); render(); }));
+    rows.push(listRow('chart', 'var(--water-l)', 'var(--water)', '體重趨勢', '每次量測的紀錄',
+      () => { S.tab = 'weight'; window.scrollTo(0, 0); render(); }));
+  }
+  rows.push(listRow('cog', 'var(--line)', 'var(--ink2)', '帳號設定', '名稱、每日熱量',
+    () => { S.tab = 'acct'; window.scrollTo(0, 0); render(); }));
+  rows.push(listRow('logout', 'var(--over-b)', 'var(--over)', '登出', '',
+    async () => { await sb.auth.signOut(); location.reload(); }));
+  items.push(el('div', { class: 'lgroup' }, rows));
+
+  items.push(el('p', { class: 'mut', style: 'font-size:12px;line-height:1.7;margin:0 0 24px',
+    text: '營養素換算為暫估係數，以營養師建議為準。' }));
+
+  return [head, el('div', { class: 'wrap', style: 'padding-top:18px' }, items)];
+}
+
+function topBar(title, right) {
+  return el('div', { class: 'tbar' }, [
+    el('button', { onclick: () => { S.tab = 'set'; window.scrollTo(0, 0); render(); },
+      style: 'width:32px;height:32px;display:flex;align-items:center;justify-content:center' },
+      svg('<path d="M15 18l-6-6 6-6"/>', 20, 'var(--ink2)', 2)),
+    el('span', { class: 'tt', text: title }),
+    right || null,
+  ].filter(Boolean));
+}
+
+/* ───────── 計畫目標 ───────── */
+function planView() {
+  const pi = planInfo(me), c = calcPlan(me);
+  const rows = [
+    ['計畫目標', LBL.goal[me.goal] || '—'],
+    ['生日', me.birth_date || '—'],
+    ['生理性別', me.sex === 'male' ? '男' : (me.sex === 'female' ? '女' : '—')],
+    ['身高', (me.height_cm || '—') + ' 公分'],
+    ['活動程度', LBL.act[me.activity] || '—'],
+    ['飲食型態', LBL.diet[me.diet_style] || '—'],
+    ['餐點習慣', LBL.meal[me.meal_habit] || '—'],
+    ['每日熱量', c.kcal + ' kcal'],
+    ['目標飲水', (me.water_goal_ml || c.water) + ' ml'],
+    ['基礎代謝 BMR', c.bmr + ' kcal'],
+    ['總消耗 TDEE', c.tdee + ' kcal'],
+  ];
+  const lw = latestWeight();
+  return [
+    topBar('計畫目標', el('button', { style: 'font-size:14px;font-weight:500;color:var(--ac-d)',
+      onclick: () => { D.ob = 0; D.draft = Object.assign({}, me); S.tab = 'onb'; window.scrollTo(0, 0); render(); },
+      text: '重新設定' })),
+    el('div', { class: 'cdown' }, [
+      el('div', { class: 'k', text: '計畫倒數' }),
+      el('div', { class: 'v' }, [ el('span', { text: String(pi.left) }), el('small', { text: '天' }) ]),
+      el('div', { style: 'font-size:12.5px;color:#A9CFC5;margin-top:6px',
+        text: '共 ' + pi.days + ' 天 · 已過 ' + pi.elapsed + ' 天 · ' + pi.pct + '%' }),
+    ]),
+    el('div', { class: 'wrap', style: 'background:#fff;padding-top:4px;padding-bottom:8px' },
+      rows.map(([k, v]) => el('div', { class: 'drow' }, [
+        el('span', { class: 'k', text: k }), el('span', { class: 'v', text: String(v) }),
+      ]))),
+    el('div', { class: 'wrap', style: 'padding-top:18px' }, [
+      el('div', { class: 'ttl', style: 'font-size:16.5px;margin-bottom:10px', text: '目標體重' }),
+      el('div', { class: 'card' }, [
+        el('div', { style: 'display:flex;align-items:flex-end;justify-content:space-between' }, [
+          el('div', {}, [
+            el('div', { class: 'mut', style: 'font-size:12.5px', text: '現在體重' }),
+            el('div', { style: 'font-size:27px;font-weight:900;line-height:1.1',
+              text: (lw !== null ? lw : '—') + ' kg' }),
+          ]),
+          svg('<path d="M5 12h14"/><path d="M14 7l5 5-5 5"/>', 22, 'var(--mut2)'),
+          el('div', { style: 'text-align:right' }, [
+            el('div', { class: 'mut', style: 'font-size:12.5px', text: '目標體重' }),
+            el('div', { style: 'font-size:27px;font-weight:900;line-height:1.1;color:var(--ac)',
+              text: (me.target_weight_kg || '—') + ' kg' }),
+          ]),
+        ]),
+        el('button', { class: 'btn btn-sec blk', style: 'margin-top:4px',
+          onclick: () => { S.tab = 'weight'; window.scrollTo(0, 0); render(); }, text: '＋ 紀錄今天的體重' }),
+      ]),
+      el('div', { style: 'height:24px' }),
+    ]),
+  ];
+}
+
+/* ───────── 體重趨勢 ───────── */
+function weightView() {
+  const ws = S.weights.slice().reverse();
+  const lw = latestWeight(), sw = startWeight(), tw = Number(me.target_weight_kg) || null;
+  const diff = (lw !== null && sw !== null) ? Math.round((lw - sw) * 10) / 10 : null;
+  const inp = el('input', { class: 'inp', type: 'number', step: '0.1', inputmode: 'decimal',
+    placeholder: '例如 45.5', style: 'flex:1' });
+
+  let chart = null;
+  if (ws.length >= 2) {
+    const vals = ws.map(w => Number(w.weight_kg));
+    const min = Math.min.apply(null, vals.concat(tw ? [tw] : [])) - 1;
+    const max = Math.max.apply(null, vals.concat(tw ? [tw] : [])) + 1;
+    const W = 320, H = 130;
+    const x = i => (i / (vals.length - 1)) * (W - 8) + 4;
+    const y = v => H - 10 - ((v - min) / (max - min)) * (H - 24);
+    const pts = vals.map((v, i) => x(i).toFixed(1) + ',' + y(v).toFixed(1)).join(' ');
+    const s = document.createElementNS('http://www.w3.org/2000/svg', 'svg');
+    s.setAttribute('viewBox', '0 0 ' + W + ' ' + H);
+    s.setAttribute('width', '100%'); s.setAttribute('height', H);
+    s.innerHTML =
+      (tw ? '<line x1="4" y1="' + y(tw).toFixed(1) + '" x2="' + (W - 4) + '" y2="' + y(tw).toFixed(1) +
+        '" stroke="#17A88C" stroke-width="1.5" stroke-dasharray="5 5" opacity=".7"/>' : '') +
+      '<polyline points="' + pts + '" fill="none" stroke="#0F1F1B" stroke-width="2.5" ' +
+      'stroke-linecap="round" stroke-linejoin="round"/>' +
+      vals.map((v, i) => '<circle cx="' + x(i).toFixed(1) + '" cy="' + y(v).toFixed(1) +
+        '" r="3.5" fill="#17A88C"/>').join('');
+    chart = el('div', { class: 'card' }, [
+      s,
+      el('div', { style: 'display:flex;justify-content:space-between;font-size:11.5px;color:var(--mut)' }, [
+        el('span', { text: fmtD(ws[0].measured_on) }),
+        tw ? el('span', { style: 'color:var(--ac)', text: '虛線 = 目標 ' + tw + ' kg' }) : null,
+        el('span', { text: fmtD(ws[ws.length - 1].measured_on) }),
+      ].filter(Boolean)),
+    ]);
+  }
+
+  return [
+    topBar('體重趨勢'),
+    el('div', { class: 'wrap', style: 'padding-top:18px' }, [
+      el('div', { class: 'card' }, [
+        el('div', { style: 'display:flex;align-items:flex-end;gap:14px' }, [
+          el('div', { style: 'flex:1' }, [
+            el('div', { class: 'mut', style: 'font-size:12.5px', text: '目前體重' }),
+            el('div', { style: 'font-size:38px;font-weight:900;line-height:1',
+              text: (lw !== null ? lw : '—') + '' }),
+            el('div', { style: 'font-size:13px;color:' + (diff && diff > 0 ? 'var(--over)' : 'var(--ac)'),
+              text: diff === null ? '還沒紀錄' : (diff === 0 ? '與起始持平' : '起始 ' + sw + ' kg，總共 ' + (diff > 0 ? '+' : '') + diff + ' kg') }),
+          ]),
+          tw ? el('div', { style: 'text-align:right' }, [
+            el('div', { class: 'mut', style: 'font-size:12.5px', text: '目標' }),
+            el('div', { style: 'font-size:22px;font-weight:700;color:var(--ac)', text: tw + ' kg' }),
+          ]) : null,
+        ].filter(Boolean)),
+      ]),
+      chart,
+      el('div', { class: 'card' }, [
+        el('div', { class: 'ttl', style: 'font-size:15.5px', text: '紀錄今天的體重' }),
+        el('div', { style: 'display:flex;gap:9px' }, [
+          inp,
+          el('button', { class: 'btn btn-pri', style: 'padding:0 20px', onclick: async () => {
+            const v = Number(inp.value);
+            if (!v || v < 20 || v > 250) return toast('請輸入正確的體重');
+            const { error } = await sb.from('body_measurements')
+              .upsert({ student_id: me.id, measured_on: today(), weight_kg: v },
+                { onConflict: 'student_id,measured_on' });
+            if (error) return toast('儲存失敗：' + error.message);
+            inp.value = '';
+            await loadWeights();
+            toast('已存'); render();
+          }, text: '儲存' }),
+        ]),
+      ]),
+      ws.length ? el('div', { class: 'card' }, [
+        el('div', { class: 'ttl', style: 'font-size:15.5px', text: '歷史紀錄' }),
+        el('div', {}, S.weights.map(w => el('div', { class: 'drow' }, [
+          el('span', { class: 'k', style: 'font-weight:400', text: w.measured_on }),
+          el('span', { class: 'v', style: 'font-weight:700', text: w.weight_kg + ' kg' }),
+        ]))),
+      ]) : el('div', { class: 'sp', text: '還沒有體重紀錄。' }),
+      el('div', { style: 'height:24px' }),
+    ].filter(Boolean)),
+  ];
+}
+
+/* ───────── 帳號設定 ───────── */
+function acctView() {
   const nameI = el('input', { class: 'inp', value: me.display_name || '' });
   nameI.addEventListener('change', async () => {
     const v = nameI.value.trim(); if (!v) return;
@@ -848,21 +1135,24 @@ function setView() {
     if (error) return toast('儲存失敗：' + error.message);
     me.kcal_goal = v; toast('已存'); render();
   });
-  const items = [];
-  if (me.plan_started_at) items.push(planCard(me, false));
-  items.push(el('div', { class: 'card lift', style: 'border-radius:24px' }, [
-      el('div', { class: 'lbl', text: '顯示名稱' }), nameI,
-      el('div', { class: 'lbl', style: 'margin-top:8px', text: '每日熱量目標' }), kcalI,
-    ]));
-  if (me.role !== 'coach') items.push(el('button', { class: 'btn btn-sec blk', style: 'margin-bottom:10px',
-    onclick: () => { D.ob = 0; D.draft = Object.assign({}, me); S.tab = 'onb'; window.scrollTo(0, 0); render(); },
-    text: me.plan_started_at ? '重新設定計畫' : '開始執行計畫' }));
-  items.push(
-    el('button', { class: 'btn btn-sec blk', style: 'margin-bottom:14px',
-      onclick: async () => { await sb.auth.signOut(); location.reload(); }, text: '登出' }),
-    el('p', { class: 'mut', style: 'font-size:12px;line-height:1.7;margin:0 0 24px',
-      text: '營養素換算為暫估係數，以營養師建議為準。' }));
-  return [head, el('div', { class: 'wrap', style: 'margin-top:-36px' }, items)];
+  const waterI = el('input', { class: 'inp', type: 'number', inputmode: 'numeric', value: me.water_goal_ml || 2000 });
+  waterI.addEventListener('change', async () => {
+    const v = Number(waterI.value) || 2000;
+    const { error } = await sb.from('profiles').update({ water_goal_ml: v }).eq('id', me.id);
+    if (error) return toast('儲存失敗：' + error.message);
+    me.water_goal_ml = v; toast('已存'); render();
+  });
+  return [
+    topBar('帳號設定'),
+    el('div', { class: 'wrap', style: 'padding-top:18px' }, [
+      el('div', { class: 'card' }, [
+        el('div', { class: 'lbl', text: '顯示名稱' }), nameI,
+        el('div', { class: 'lbl', style: 'margin-top:8px', text: '每日熱量目標（kcal）' }), kcalI,
+        el('div', { class: 'lbl', style: 'margin-top:8px', text: '每日飲水目標（ml）' }), waterI,
+      ]),
+      el('div', { style: 'height:24px' }),
+    ]),
+  ];
 }
 
 /* ───────── 計畫設定流程 ───────── */
@@ -962,6 +1252,11 @@ const OB = [
     mid: d => ACT.map(([k, t, s]) => optBtn(d.activity === k, t, s, () => set({ activity: k }))),
     ok: d => !!d.activity },
 
+  { key:'days', q:'這份計畫要執行多久？', d:'計畫長度決定進度倒數與教練驗收的時間點。',
+    mid: d => [[14,'兩週'],[30,'一個月'],[60,'兩個月'],[90,'三個月']].map(([n, t]) =>
+      optBtn(Number(d.plan_days) === n, t, n + ' 天', () => set({ plan_days: n }))),
+    ok: d => !!d.plan_days },
+
   { key:'done', summary: true, q:'計畫算好了。', d:'教練會看到這份設定，並依此給你每天的建議。',
     next:'開始執行計畫', ok: () => true },
 ];
@@ -1037,7 +1332,7 @@ async function savePlan() {
   const fields = {
     sex: p.sex, birth_date: p.birth_date, height_cm: p.height_cm, weight_kg: p.weight_kg,
     goal: p.goal, target_weight_kg: p.target_weight_kg, diet_style: p.diet_style,
-    meal_habit: p.meal_habit, activity: p.activity,
+    meal_habit: p.meal_habit, activity: p.activity, plan_days: p.plan_days || 30,
     kcal_goal: c.kcal, water_goal_ml: c.water, bmr_kcal: c.bmr, tdee_kcal: c.tdee,
     plan_started_at: new Date().toISOString(), start_date: today(),
   };
@@ -1092,9 +1387,10 @@ function nav() {
   const items = me.role === 'coach'
     ? [['coach', 'people', '學員'], ['home', 'home', '單日'], ['set', 'user', '我的']]
     : [['home', 'home', '首頁'], ['log', 'book', '紀錄'], ['set', 'user', '我的']];
+  const cur = ['plan', 'weight', 'acct'].indexOf(S.tab) >= 0 ? 'set' : S.tab;
   return el('nav', { class: 'nav' }, items.map(([k, ic, label]) => el('button', {
-    class: S.tab === k ? 'on' : '', onclick: () => { S.tab = k; window.scrollTo(0, 0); render(); },
-  }, [ svg(ICON[ic], 21, 'currentColor', S.tab === k ? 2 : 1.7), el('span', { text: label }) ])));
+    class: cur === k ? 'on' : '', onclick: () => { S.tab = k; window.scrollTo(0, 0); render(); },
+  }, [ svg(ICON[ic], 21, 'currentColor', cur === k ? 2 : 1.7), el('span', { text: label }) ])));
 }
 
 function render() {
@@ -1102,6 +1398,9 @@ function render() {
     : S.tab === 'coach' ? coachView()
     : S.tab === 'log' ? logView()
     : S.tab === 'set' ? setView()
+    : S.tab === 'plan' ? planView()
+    : S.tab === 'weight' ? weightView()
+    : S.tab === 'acct' ? acctView()
     : homeView();
   if (S.tab === 'onb') { $('#app').replaceChildren(...body); return; }
   $('#app').replaceChildren(...body.filter(Boolean), nav());
