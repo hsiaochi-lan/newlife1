@@ -3,8 +3,8 @@
   "short_name": "飲食紀錄",
   "start_url": "./index.html",
   "display": "standalone",
-  "background_color": "#f2f2f3",
-  "theme_color": "#f2f2f3",
+  "background_color": "#0F1F1B",
+  "theme_color": "#0F1F1B",
   "icons": [
     {
       "src": "icon.svg",
