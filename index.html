@@ -8,7 +8,7 @@
 <meta name="theme-color" content="#0F1F1B">
 <meta name="color-scheme" content="light only">
 <meta name="supported-color-schemes" content="light">
-<title>飲食紀錄</title>
+<title>全新生活飲食記錄</title>
 <link rel="manifest" href="manifest.json">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -208,7 +208,7 @@ textarea.inp{min-height:auto;line-height:1.6}
 <div id="app"><div class="sp">載入中…</div></div>
 <div id="toast" class="toast"></div>
 
-<script src="config.js?v=4"></script>
+<script src="config.js?v=5"></script>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.45.4/dist/umd/supabase.js"></script>
 <script>
 /* ───────── 常數 ───────── */
@@ -378,6 +378,38 @@ async function loadMe() {
 }
 
 /* ───────── 登入 ───────── */
+function loginArt() {
+  const s = document.createElementNS('http://www.w3.org/2000/svg', 'svg');
+  s.setAttribute('viewBox', '0 0 260 150');
+  s.setAttribute('width', '100%'); s.setAttribute('height', '150');
+  s.setAttribute('aria-hidden', 'true');
+  s.innerHTML = [
+    // plate
+    '<ellipse cx="130" cy="104" rx="72" ry="20" fill="#0A1815"/>',
+    '<path d="M58 96a72 20 0 0 0 144 0" fill="none" stroke="#5BE2BE" stroke-width="2.4" stroke-linecap="round"/>',
+    '<ellipse cx="130" cy="96" rx="72" ry="20" fill="#16302A" stroke="#5BE2BE" stroke-width="2.4"/>',
+    '<ellipse cx="130" cy="96" rx="53" ry="13.5" fill="none" stroke="#2F5A50" stroke-width="1.6"/>',
+    // broccoli
+    '<path d="M104 88c-5-1-9-5-8-10 0-4 4-7 8-6 1-5 6-8 11-6 4-6 13-5 15 2 6 0 9 6 6 11-2 5-7 8-12 8z" fill="#3E9E5E" stroke="#8FEFC4" stroke-width="1.6" stroke-linejoin="round"/>',
+    '<path d="M118 88v6" stroke="#8FEFC4" stroke-width="1.6" stroke-linecap="round"/>',
+    // tomato
+    '<circle cx="148" cy="84" r="11" fill="#D65A44" stroke="#FFC3B6" stroke-width="1.6"/>',
+    '<path d="M148 73c0-3 2-5 5-5" fill="none" stroke="#8FEFC4" stroke-width="1.6" stroke-linecap="round"/>',
+    // leaf garnish
+    '<path d="M164 94c6-9 15-12 22-10 1 7-4 15-12 17-4 1-8 0-10-2z" fill="#2F7A54" stroke="#8FEFC4" stroke-width="1.5" stroke-linejoin="round"/>',
+    // fork
+    '<path d="M36 40v28c0 4 3 6 6 6s6-2 6-6V40" fill="none" stroke="#5BE2BE" stroke-width="2.2" stroke-linecap="round"/>',
+    '<path d="M36 40v14M42 40v14M48 40v14M42 74v24" fill="none" stroke="#5BE2BE" stroke-width="2.2" stroke-linecap="round"/>',
+    // knife
+    '<path d="M218 40c6 6 6 22 0 30v28" fill="none" stroke="#5BE2BE" stroke-width="2.2" stroke-linecap="round"/>',
+    // sparks
+    '<circle cx="80" cy="34" r="3" fill="#5BE2BE" opacity=".7"/>',
+    '<circle cx="196" cy="26" r="2.2" fill="#5BE2BE" opacity=".55"/>',
+    '<circle cx="168" cy="44" r="1.8" fill="#5BE2BE" opacity=".45"/>',
+  ].join('');
+  return s;
+}
+
 function renderLogin() {
   const email = el('input', { class: 'inp', type: 'email', placeholder: 'you@example.com', autocomplete: 'username' });
   const pass  = el('input', { class: 'inp', type: 'password', placeholder: '密碼', autocomplete: 'current-password' });
@@ -390,22 +422,26 @@ function renderLogin() {
     await loadMe();
   };
   pass.addEventListener('keydown', e => { if (e.key === 'Enter') go(); });
+
   $('#app').replaceChildren(
-    el('div', { class: 'hero', style: 'padding-bottom:80px' }, [
+    el('div', { style: 'background:var(--ink);padding:calc(26px + env(safe-area-inset-top)) 0 26px' },
       el('div', { class: 'wrap' }, [
-        el('div', { class: 'kick', text: 'DIET LOG' }),
-        el('div', { class: 'h1', style: 'font-size:30px', text: '飲食紀錄' }),
+        el('div', { class: 'kick', text: 'NEW LIFE' }),
+        el('h1', { style: 'font-size:29px;font-weight:900;color:#fff;line-height:1.3;margin:5px 0 0',
+          text: '全新生活飲食記錄' }),
         el('div', { class: 'sub', text: '每天記，教練看得到。' }),
+        el('div', { style: 'margin-top:14px' }, loginArt()),
+      ])),
+    el('div', { class: 'wrap', style: 'padding-top:20px' }, [
+      el('div', { class: 'card lift', style: 'border-radius:22px' }, [
+        el('div', { class: 'lbl', text: 'EMAIL' }), email,
+        el('div', { class: 'lbl', style: 'margin-top:8px', text: '密碼' }), pass,
+        el('button', { class: 'btn btn-pri blk', style: 'margin-top:8px', onclick: go, text: '登入' }),
+        msg,
       ]),
-      (() => { const s = svg(ICON.leaf, 170, '#5BE2BE', 1); s.setAttribute('class', 'deco'); return s; })(),
-    ]),
-    el('div', { class: 'wrap' }, el('div', { class: 'card lift', style: 'margin-top:-46px;border-radius:24px;gap:0' }, [
-      el('div', { class: 'lbl', style: 'margin-bottom:6px', text: 'EMAIL' }), email,
-      el('div', { class: 'lbl', style: 'margin:14px 0 6px', text: '密碼' }), pass,
-      el('button', { class: 'btn btn-pri blk', style: 'margin-top:16px', onclick: go, text: '登入' }),
-      el('p', { class: 'mut', style: 'font-size:12.5px;margin:12px 0 0;text-align:center', text: '帳號由教練建立，忘記密碼找教練。' }),
-      msg,
-    ]))
+      el('p', { class: 'mut', style: 'font-size:12.5px;text-align:center;margin:0 0 30px',
+        text: '帳號由教練建立，忘記密碼請找教練。' }),
+    ])
   );
 }
 

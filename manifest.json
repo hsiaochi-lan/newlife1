@@ -1,6 +1,6 @@
 {
-  "name": "飲食紀錄",
-  "short_name": "飲食紀錄",
+  "name": "全新生活飲食記錄",
+  "short_name": "飲食記錄",
   "start_url": "./index.html",
   "display": "standalone",
   "background_color": "#0F1F1B",
