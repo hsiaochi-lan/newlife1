@@ -129,6 +129,45 @@ textarea.inp{min-height:auto;line-height:1.6}
 .toast.show{opacity:1}
 .sp{text-align:center;padding:60px 18px;color:var(--mut);font-size:14px}
 .hide{display:none!important}
+
+/* onboarding */
+.ob{min-height:100vh;display:flex;flex-direction:column;background:var(--bg)}
+.ob-top{display:flex;align-items:center;gap:12px;padding:calc(16px + env(safe-area-inset-top)) 18px 0;max-width:460px;margin:0 auto;width:100%}
+.ob-back{width:40px;height:40px;flex:none;border-radius:50%;background:#E9EFED;display:flex;align-items:center;justify-content:center}
+.ob-prog{flex:1;height:8px;border-radius:4px;background:#E2E9E6;overflow:hidden}
+.ob-prog>i{display:block;height:100%;background:var(--ac);border-radius:4px;transition:width .25s}
+.ob-body{flex:1;max-width:460px;margin:0 auto;width:100%;padding:24px 18px 0;display:flex;flex-direction:column}
+.ob-q{font-size:26px;font-weight:900;line-height:1.3;color:var(--ink)}
+.ob-d{font-size:14.5px;line-height:1.8;color:#5A6B66;margin:12px 0 0}
+.ob-mid{flex:1;display:flex;flex-direction:column;justify-content:center;padding:26px 0}
+.ob-foot{max-width:460px;margin:0 auto;width:100%;padding:12px 18px calc(18px + env(safe-area-inset-bottom))}
+.opt{width:100%;text-align:left;background:#fff;border:2px solid #fff;border-radius:16px;padding:16px 18px;
+  margin-bottom:11px;box-shadow:0 2px 10px rgba(20,60,50,.05)}
+.opt .t{font-size:15.5px;font-weight:500;color:var(--ink2)}
+.opt .s{font-size:12.5px;color:var(--mut);margin-top:3px;line-height:1.5}
+.opt.on{border-color:var(--ac);background:#F2FBF8}
+.opt.on .t{color:var(--ac-d);font-weight:700}
+.opt.on .s{color:var(--ac-d);opacity:.85}
+.wheel{display:flex;gap:10px;justify-content:center}
+.wcol{flex:1;max-width:120px}
+.wcol label{display:block;text-align:center;font-size:12px;color:var(--mut);margin-bottom:7px}
+.wcol select{width:100%;-webkit-appearance:none;appearance:none;text-align:center;text-align-last:center;
+  border:2px solid var(--line);background:#fff;border-radius:14px;padding:13px 6px;font-size:19px;
+  font-weight:700;color:var(--ac-d)}
+.wcol select:focus{border-color:var(--ac);outline:none}
+.big-num{text-align:center;font-size:52px;font-weight:900;line-height:1;color:var(--ink)}
+.big-num small{font-size:20px;font-weight:700;color:var(--mut);margin-left:4px}
+.rng{width:100%;-webkit-appearance:none;appearance:none;height:34px;background:transparent}
+.rng::-webkit-slider-runnable-track{height:8px;border-radius:4px;background:#D9E5E1}
+.rng::-webkit-slider-thumb{-webkit-appearance:none;width:30px;height:30px;border-radius:50%;
+  background:var(--ac);border:4px solid #fff;box-shadow:0 2px 8px rgba(20,60,50,.25);margin-top:-11px}
+.rng::-moz-range-track{height:8px;border-radius:4px;background:#D9E5E1}
+.rng::-moz-range-thumb{width:26px;height:26px;border:4px solid #fff;border-radius:50%;background:var(--ac)}
+.ob-hero{text-align:center}
+.plan-g{display:grid;grid-template-columns:1fr 1fr;gap:9px}
+.plan-c{background:var(--soft);border-radius:14px;padding:12px 14px}
+.plan-c .k{font-size:11.5px;color:var(--mut)}
+.plan-c .v{font-size:19px;font-weight:700;color:var(--ink);margin-top:2px}
 </style>
 </head>
 <body>
@@ -174,6 +213,47 @@ const MACROS = [
   ['膳食纖維', p => p.veg*2.4 + p.fruit*2 + p.grain*1.8,             25, '#B5892F', true ],
 ];
 const QUICK = ['蔬菜量夠，維持。', '這餐脂肪少半份。', '蛋白質提前吃。'];
+
+/* ───────── 計畫設定 ───────── */
+const ACT = [
+  ['sedentary', '久坐不動', '沒有運動或是很少運動', 1.2],
+  ['light',     '輕度活動', '每週 1-3 次，大約 30 分鐘的中強度訓練', 1.375],
+  ['moderate',  '中度活動', '每週 3-5 次，大約 45 分鐘的中強度訓練', 1.55],
+  ['high',      '高度活動', '每週 6-7 次，大約 60 分鐘的訓練', 1.725],
+  ['athlete',   '極高度活動', '非常嚴格訓練包括舉重，每週 2-3 次', 1.9],
+];
+const GOALS = [['lose','減重',''],['gain','增肌',''],['maintain','保持身材','']];
+const DIETS = [
+  ['balanced', '均衡飲食', '六大類都吃，不特別限制'],
+  ['lowcarb',  '低醣',     '減少澱粉與精緻糖'],
+  ['keto',     '生酮',     '極低醣、高脂'],
+  ['veg',      '蔬食',     '素食或以植物性為主'],
+];
+const MEALH = [
+  ['cook',   '我偏好自己煮', ''],
+  ['eatout', '我大部分吃外食', '餐廳外帶、外送（Uber Eats、foodpanda 等）'],
+  ['mixed',  '我是混合型', '平日吃外食、週末會下廚'],
+];
+const LBL = {
+  sex: { female: '生理女性', male: '生理男性' },
+  goal: { lose: '減重', gain: '增肌', maintain: '保持身材' },
+  diet: { balanced: '均衡飲食', lowcarb: '低醣', keto: '生酮', veg: '蔬食' },
+  meal: { cook: '自己煮', eatout: '外食為主', mixed: '混合型' },
+  act: { sedentary: '久坐不動', light: '輕度活動', moderate: '中度活動', high: '高度活動', athlete: '極高度活動' },
+};
+function calcPlan(p) {
+  const a = p.birth_date ? Math.floor((Date.now() - new Date(p.birth_date)) / 3.15576e10) : 30;
+  const h = Number(p.height_cm) || 165, w = Number(p.weight_kg) || 60;
+  const bmr = Math.round(10 * w + 6.25 * h - 5 * a + (p.sex === 'male' ? 5 : -161));
+  const f = (ACT.find(x => x[0] === p.activity) || ACT[1])[3];
+  const tdee = Math.round(bmr * f);
+  let kcal = tdee;
+  if (p.goal === 'lose') kcal = Math.max(bmr, tdee - 500);
+  if (p.goal === 'gain') kcal = tdee + 300;
+  return { age: a, bmr, tdee, kcal: Math.round(kcal / 10) * 10,
+    bmi: Math.round(w / Math.pow(h / 100, 2) * 10) / 10,
+    water: Math.round(w * 35 / 50) * 50 };
+}
 
 /* ───────── 工具 ───────── */
 const $ = s => document.querySelector(s);
@@ -295,7 +375,7 @@ function renderLogin() {
 function targetId() { return me.role === 'coach' ? (S.viewStudent || me.id) : me.id; }
 
 async function loadStudents() {
-  const { data } = await sb.from('profiles').select('id,display_name,role').eq('role', 'student').order('display_name');
+  const { data } = await sb.from('profiles').select('*').eq('role', 'student').order('display_name');
   S.students = data || [];
   if (!S.viewStudent && S.students.length) S.viewStudent = S.students[0].id;
 }
@@ -485,6 +565,9 @@ function homeView() {
 
   const body = [
     overWarn(t, mac),
+  ];
+  if (me.role !== 'coach' && !me.plan_started_at) body.push(startPlanCard());
+  body.push(
     el('div', { style: 'display:flex;align-items:center;justify-content:space-between;margin-bottom:12px' }, [
       el('div', { class: 'ttl', text: '六大類' }),
       el('span', { class: 'pill' + (done === 6 ? '' : ' g'), text: done + ' / 6 達標' }),
@@ -503,7 +586,7 @@ function homeView() {
       el('div', { class: 'bar', style: 'height:6px;background:' + (m.over ? 'var(--over-b)' : 'var(--line)') },
         el('i', { style: 'width:' + m.pct + '%;background:' + (m.over ? 'var(--over)' : m.color) })),
     ]))),
-  ];
+  );
 
   const cs = S.comments.filter(c => c.is_summary).concat(S.comments.filter(c => !c.is_summary));
   if (cs.length) {
@@ -667,6 +750,13 @@ function coachView() {
   ]);
 
   const body = [];
+  const stu = S.students.find(s => s.id === S.viewStudent);
+  if (stu && stu.plan_started_at) body.push(planCard(stu, true));
+  else if (stu) body.push(el('div', { class: 'card' }, [
+    el('div', { class: 'ttl', style: 'font-size:15.5px', text: '還沒設定計畫' }),
+    el('p', { class: 'mut', style: 'font-size:13px;margin:0;line-height:1.7',
+      text: '請學員在 App 首頁按「開始執行計畫」填完設定。' }),
+  ]));
   if (!S.log) {
     body.push(el('div', { class: 'sp', text: '這天沒記。' }));
     return [head, top, el('div', { class: 'wrap' }, body)];
@@ -758,16 +848,243 @@ function setView() {
     if (error) return toast('儲存失敗：' + error.message);
     me.kcal_goal = v; toast('已存'); render();
   });
-  return [head, el('div', { class: 'wrap' }, [
-    el('div', { class: 'card lift', style: 'margin-top:-36px;border-radius:24px' }, [
+  const items = [];
+  if (me.plan_started_at) items.push(planCard(me, false));
+  items.push(el('div', { class: 'card lift', style: 'border-radius:24px' }, [
       el('div', { class: 'lbl', text: '顯示名稱' }), nameI,
       el('div', { class: 'lbl', style: 'margin-top:8px', text: '每日熱量目標' }), kcalI,
-    ]),
+    ]));
+  if (me.role !== 'coach') items.push(el('button', { class: 'btn btn-sec blk', style: 'margin-bottom:10px',
+    onclick: () => { D.ob = 0; D.draft = Object.assign({}, me); S.tab = 'onb'; window.scrollTo(0, 0); render(); },
+    text: me.plan_started_at ? '重新設定計畫' : '開始執行計畫' }));
+  items.push(
     el('button', { class: 'btn btn-sec blk', style: 'margin-bottom:14px',
       onclick: async () => { await sb.auth.signOut(); location.reload(); }, text: '登出' }),
     el('p', { class: 'mut', style: 'font-size:12px;line-height:1.7;margin:0 0 24px',
-      text: '營養素換算為暫估係數，以營養師建議為準。' }),
+      text: '營養素換算為暫估係數，以營養師建議為準。' }));
+  return [head, el('div', { class: 'wrap', style: 'margin-top:-36px' }, items)];
+}
+
+/* ───────── 計畫設定流程 ───────── */
+const D = { ob: 0, draft: {} };
+
+function optBtn(on, title, sub, onclick) {
+  return el('button', { class: 'opt' + (on ? ' on' : ''), onclick }, [
+    el('div', { class: 't', text: title }),
+    sub ? el('div', { class: 's', text: sub }) : null,
+  ].filter(Boolean));
+}
+function wheelSel(label, list, val, onchange) {
+  const s = el('select', { onchange: e => onchange(e.target.value) },
+    list.map(v => el('option', { value: String(v[0] !== undefined && Array.isArray(v) ? v[0] : v),
+      selected: String(Array.isArray(v) ? v[0] : v) === String(val),
+      text: String(Array.isArray(v) ? v[1] : v) })));
+  return el('div', { class: 'wcol' }, [ el('label', { text: label }), s ]);
+}
+const range = (a, b) => { const r = []; for (let i = a; i <= b; i++) r.push(i); return r; };
+
+const OB = [
+  { key:'sex', q:'你的性別是？', d:'性別會影響基礎代謝、身體組成與營養需求，先知道性別才能給出準確又安全的建議。',
+    mid: d => [
+      optBtn(d.sex === 'female', '生理女性', '', () => set({ sex:'female' })),
+      optBtn(d.sex === 'male',   '生理男性', '', () => set({ sex:'male' })),
+    ], ok: d => !!d.sex },
+
+  { key:'birth', q:'你的出生年月日是？', d:'年齡會改變代謝速度與營養需求。正確的年齡才能算出準確的熱量建議。',
+    mid: d => {
+      const bd = (d.birth_date || '1995-01-01').split('-');
+      const upd = (i, v) => { const x = bd.slice(); x[i] = String(v).padStart(2, '0');
+        set({ birth_date: x.join('-') }); };
+      return [ el('div', { class: 'wheel' }, [
+        wheelSel('年', range(1940, 2015).reverse(), Number(bd[0]), v => upd(0, v)),
+        wheelSel('月', range(1, 12).map(m => [m, m + ' 月']), Number(bd[1]), v => upd(1, v)),
+        wheelSel('日', range(1, 31), Number(bd[2]), v => upd(2, v)),
+      ]) ];
+    }, ok: d => !!d.birth_date },
+
+  { key:'hw', q:'你的身高體重是？', d:'身高與體重用來計算 BMI 與基礎代謝率，直接影響熱量分配。',
+    mid: d => {
+      const h = Number(d.height_cm) || 160, w = Number(d.weight_kg) || 55;
+      const bmi = Math.round(w / Math.pow(h / 100, 2) * 10) / 10;
+      return [
+        el('div', { class: 'wheel' }, [
+          wheelSel('身高（公分）', range(130, 210), h, v => set({ height_cm: Number(v) })),
+          wheelSel('體重（公斤）', range(30, 150), w, v => set({ weight_kg: Number(v) })),
+        ]),
+        el('div', { style: 'text-align:center;margin-top:24px;font-size:15px;color:#5A6B66' }, [
+          el('span', { text: '你目前的 BMI 是 ' }),
+          el('b', { style: 'font-size:23px;font-weight:900;color:var(--ac)', text: String(bmi) }),
+          el('span', { text: ' kg/m²' }),
+        ]),
+      ];
+    }, ok: d => !!d.height_cm && !!d.weight_kg },
+
+  { key:'goalIntro', hero: true, q:'現在，設定你的健康目標。', d:'不論是減脂還是增肌，教練都會照著你的目標調整。',
+    icon:'dumbbell', next:'開始設定', ok: () => true },
+
+  { key:'goal', q:'你的主要目標是？', d:'主要目標決定每日熱量、營養素分配與飲食策略。',
+    mid: d => GOALS.map(([k, t, s]) => optBtn(d.goal === k, t, s, () => set({ goal: k }))),
+    ok: d => !!d.goal },
+
+  { key:'target', q:'你希望達到的目標體重是？', d:'目標體重會影響每日熱量設定、計畫長短與安全範圍。',
+    mid: d => {
+      const now = Number(d.weight_kg) || 55;
+      const t = Number(d.target_weight_kg !== undefined && d.target_weight_kg !== null ? d.target_weight_kg : now);
+      const lo = Math.max(30, Math.round(now * 0.7)), hi = Math.round(now * 1.3);
+      return [
+        el('div', { class: 'big-num' }, [
+          el('span', { style: 'font-size:22px;font-weight:700;color:var(--mut);margin-right:10px', text: now + ' →' }),
+          el('span', { text: t.toFixed(1) }), el('small', { text: 'kg' }),
+        ]),
+        el('input', { class: 'rng', type: 'range', min: lo, max: hi, step: '0.5', value: t,
+          style: 'margin-top:26px', oninput: e => set({ target_weight_kg: Number(e.target.value) }) }),
+        el('div', { style: 'display:flex;justify-content:space-between;font-size:12px;color:var(--mut)' }, [
+          el('span', { text: lo + ' kg' }), el('span', { text: hi + ' kg' }),
+        ]),
+        el('div', { style: 'text-align:center;margin-top:18px;font-size:13.5px;color:#5A6B66',
+          text: Math.abs(t - now) < 0.1 ? '維持現在的體重。'
+            : (t < now ? '要減 ' + (now - t).toFixed(1) + ' 公斤。' : '要增 ' + (t - now).toFixed(1) + ' 公斤。') }),
+      ];
+    }, ok: d => d.target_weight_kg !== undefined && d.target_weight_kg !== null },
+
+  { key:'dietIntro', hero: true, q:'接著了解你的飲食習慣。', d:'不論你注重均衡，還是偏好低醣，都能搭配出適合的計畫。',
+    icon:'bowl', next:'開始設定', ok: () => true },
+
+  { key:'diet', q:'你的飲食型態是？', d:'飲食型態決定營養素比例與教練建議的方向。',
+    mid: d => DIETS.map(([k, t, s]) => optBtn(d.diet_style === k, t, s, () => set({ diet_style: k }))),
+    ok: d => !!d.diet_style },
+
+  { key:'mealh', q:'你的餐點習慣是？', d:'知道你平常怎麼吃，才能給你真的吃得下去的建議。',
+    mid: d => MEALH.map(([k, t, s]) => optBtn(d.meal_habit === k, t, s, () => set({ meal_habit: k }))),
+    ok: d => !!d.meal_habit },
+
+  { key:'act', q:'你的運動頻率是？', d:'你動多少，決定你可以吃多少。',
+    mid: d => ACT.map(([k, t, s]) => optBtn(d.activity === k, t, s, () => set({ activity: k }))),
+    ok: d => !!d.activity },
+
+  { key:'done', summary: true, q:'計畫算好了。', d:'教練會看到這份設定，並依此給你每天的建議。',
+    next:'開始執行計畫', ok: () => true },
+];
+
+function set(fields) { Object.assign(D.draft, fields); render(); }
+
+const OB_ICON = {
+  dumbbell:'<path d="M4 9v6M7 7v10M17 7v10M20 9v6M7 12h10"/>',
+  bowl:'<path d="M3.5 11h17a8.5 8.5 0 0 1-17 0z"/><path d="M12 7.5c2.5 0 4-1.2 4-3"/><path d="M12 7.5c-2 0-3.2-.9-3.6-2.3"/>',
+};
+
+function obView() {
+  const st = OB[D.ob], d = D.draft;
+  const pct = Math.round((D.ob + 1) / OB.length * 100);
+
+  const top = el('div', { class: 'ob-top' }, [
+    el('button', { class: 'ob-back', onclick: () => {
+      if (D.ob === 0) { S.tab = 'home'; render(); } else { D.ob--; render(); }
+    } }, svg('<path d="M15 18l-6-6 6-6"/>', 19, 'var(--ink2)', 2)),
+    el('div', { class: 'ob-prog' }, el('i', { style: 'width:' + pct + '%' })),
+    el('span', { style: 'font-size:12.5px;color:var(--mut);min-width:38px;text-align:right',
+      text: (D.ob + 1) + '/' + OB.length }),
+  ]);
+
+  let mid;
+  if (st.hero) {
+    mid = [el('div', { class: 'ob-hero' }, [
+      el('div', { style: 'width:150px;height:150px;margin:0 auto;border-radius:50%;background:var(--ac-l);display:flex;align-items:center;justify-content:center' },
+        svg(OB_ICON[st.icon], 72, 'var(--ac)', 1.4)),
+    ])];
+  } else if (st.summary) {
+    const p = Object.assign({}, me, d), c = calcPlan(p);
+    mid = [
+      el('div', { class: 'card', style: 'margin:0' }, [
+        el('div', { class: 'plan-g' }, [
+          el('div', { class: 'plan-c' }, [ el('div', { class: 'k', text: '每日熱量' }), el('div', { class: 'v', text: c.kcal + ' kcal' }) ]),
+          el('div', { class: 'plan-c' }, [ el('div', { class: 'k', text: '飲水目標' }), el('div', { class: 'v', text: c.water + ' ml' }) ]),
+          el('div', { class: 'plan-c' }, [ el('div', { class: 'k', text: '基礎代謝 BMR' }), el('div', { class: 'v', text: c.bmr + ' kcal' }) ]),
+          el('div', { class: 'plan-c' }, [ el('div', { class: 'k', text: '總消耗 TDEE' }), el('div', { class: 'v', text: c.tdee + ' kcal' }) ]),
+          el('div', { class: 'plan-c' }, [ el('div', { class: 'k', text: 'BMI' }), el('div', { class: 'v', text: String(c.bmi) }) ]),
+          el('div', { class: 'plan-c' }, [ el('div', { class: 'k', text: '目標體重' }),
+            el('div', { class: 'v', text: (d.target_weight_kg ?? p.weight_kg) + ' kg' }) ]),
+        ]),
+        el('p', { class: 'mut', style: 'font-size:12px;line-height:1.7;margin:12px 0 0',
+          text: '熱量以 Mifflin-St Jeor 公式估算，僅供參考，實際請以營養師建議為準。' }),
+      ]),
+    ];
+  } else {
+    mid = st.mid(d);
+  }
+
+  const canNext = st.ok(d);
+  const foot = el('div', { class: 'ob-foot' }, el('button', {
+    class: 'btn btn-pri blk', disabled: !canNext, onclick: async () => {
+      if (D.ob < OB.length - 1) { D.ob++; window.scrollTo(0, 0); render(); return; }
+      await savePlan();
+    }, text: st.next || '繼續',
+  }));
+
+  return [el('div', { class: 'ob' }, [
+    top,
+    el('div', { class: 'ob-body' }, [
+      el('div', { class: 'ob-q', text: st.q }),
+      st.d ? el('p', { class: 'ob-d', text: st.d }) : null,
+      el('div', { class: 'ob-mid' }, mid),
+    ].filter(Boolean)),
+    foot,
   ])];
+}
+
+async function savePlan() {
+  const p = Object.assign({}, me, D.draft), c = calcPlan(p);
+  const fields = {
+    sex: p.sex, birth_date: p.birth_date, height_cm: p.height_cm, weight_kg: p.weight_kg,
+    goal: p.goal, target_weight_kg: p.target_weight_kg, diet_style: p.diet_style,
+    meal_habit: p.meal_habit, activity: p.activity,
+    kcal_goal: c.kcal, water_goal_ml: c.water, bmr_kcal: c.bmr, tdee_kcal: c.tdee,
+    plan_started_at: new Date().toISOString(), start_date: today(),
+  };
+  const { error } = await sb.from('profiles').update(fields).eq('id', me.id);
+  if (error) return toast('儲存失敗：' + error.message);
+  Object.assign(me, fields);
+  D.ob = 0; D.draft = {};
+  S.tab = 'home'; window.scrollTo(0, 0); render();
+  toast('計畫已送給教練');
+}
+
+function planCard(p, forCoach) {
+  const c = calcPlan(p);
+  const rows = [
+    ['目標', LBL.goal[p.goal] || '—'],
+    ['目前 → 目標', (p.weight_kg || '—') + ' → ' + (p.target_weight_kg || '—') + ' kg'],
+    ['每日熱量', c.kcal + ' kcal'],
+    ['飲水目標', c.water + ' ml'],
+    ['BMI', String(c.bmi)],
+    ['活動量', LBL.act[p.activity] || '—'],
+    ['飲食型態', LBL.diet[p.diet_style] || '—'],
+    ['餐點習慣', LBL.meal[p.meal_habit] || '—'],
+  ];
+  return el('div', { class: 'card' }, [
+    el('div', { style: 'display:flex;align-items:center;justify-content:space-between' }, [
+      el('div', { class: 'ttl', style: 'font-size:15.5px', text: forCoach ? '學員的計畫設定' : '我的計畫' }),
+      el('span', { class: 'pill', text: '第 ' + Math.max(1, Math.round((Date.now() - new Date(p.plan_started_at)) / 864e5) + 1) + ' 天' }),
+    ]),
+    el('div', { class: 'plan-g' }, rows.map(([k, v]) => el('div', { class: 'plan-c' }, [
+      el('div', { class: 'k', text: k }), el('div', { class: 'v', style: 'font-size:15.5px', text: String(v) }),
+    ]))),
+    el('div', { class: 'mut', style: 'font-size:12px',
+      text: (LBL.sex[p.sex] || '') + ' · ' + c.age + ' 歲 · ' + (p.height_cm || '—') + ' cm · BMR ' + c.bmr + ' kcal' }),
+  ]);
+}
+
+function startPlanCard() {
+  return el('div', { class: 'card lift', style: 'background:var(--ink);border-radius:20px' }, [
+    el('div', { class: 'kick', text: '還沒開始' }),
+    el('div', { style: 'font-size:19px;font-weight:700;color:#fff;line-height:1.4',
+      text: '設定你的計畫，教練才知道要怎麼帶你。' }),
+    el('p', { style: 'font-size:13px;color:#8FAFA6;margin:0;line-height:1.7',
+      text: '十個問題，兩分鐘。之後每日熱量與飲水目標會自動算好。' }),
+    el('button', { class: 'btn btn-pri blk', style: 'margin-top:4px',
+      onclick: () => { D.ob = 0; D.draft = {}; S.tab = 'onb'; window.scrollTo(0, 0); render(); },
+      text: '開始執行計畫' }),
+  ]);
 }
 
 /* ───────── 導覽 ───────── */
@@ -781,10 +1098,12 @@ function nav() {
 }
 
 function render() {
-  const body = S.tab === 'coach' ? coachView()
+  const body = S.tab === 'onb' ? obView()
+    : S.tab === 'coach' ? coachView()
     : S.tab === 'log' ? logView()
     : S.tab === 'set' ? setView()
     : homeView();
+  if (S.tab === 'onb') { $('#app').replaceChildren(...body); return; }
   $('#app').replaceChildren(...body.filter(Boolean), nav());
 }
 </script>
